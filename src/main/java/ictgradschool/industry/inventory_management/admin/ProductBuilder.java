@@ -40,7 +40,7 @@ public class ProductBuilder {
         return this;
     }
 
-    public ProductBuilder unitPrice(int unitPrice) throws BuilderException{
+    public ProductBuilder unitPrice(double unitPrice) throws BuilderException{
         if (unitPrice < 0) {
             throw new BuilderException("ProductBuilder.unitPrice :: value for unitPrice has to be positive");
         }

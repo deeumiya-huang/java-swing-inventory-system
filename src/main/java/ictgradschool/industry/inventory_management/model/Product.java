@@ -7,6 +7,8 @@ public class Product {
     public double unitPrice;
     public int stock;
 
+    public Product(){}
+
     public Product(int productID, String productName, String productDescription, double unitPrice, int stock) {
         this.productID = productID;
         this.productName = productName;
@@ -16,7 +18,8 @@ public class Product {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder(productID);
+        StringBuilder sb = new StringBuilder();
+        sb.append(productID);
         sb.append(", ");
         sb.append(productName);
         sb.append(", description: ");
