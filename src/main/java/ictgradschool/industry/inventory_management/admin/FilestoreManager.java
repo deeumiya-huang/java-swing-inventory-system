@@ -17,9 +17,8 @@ import java.util.List;
 
 public class FilestoreManager {
 
-    public static List<Product> readData() {
+    public static List<Product> readData(File jsonFile) {
         List<Product> results = new ArrayList<>();
-        File jsonFile = new File("io/output.json");
         ObjectMapper mapper = new ObjectMapper();
         try {
             results = mapper.readValue(jsonFile, new TypeReference<List<Product>>() {});
