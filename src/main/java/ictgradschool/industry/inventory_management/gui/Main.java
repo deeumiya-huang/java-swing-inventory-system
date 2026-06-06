@@ -62,6 +62,33 @@ public class Main extends JFrame {
             inventoryManagerBtn = new JButton("Open Inventory Manager");
             posBtn = new JButton("Open Point of Sale");
             buildPanelGui(backBtn, inventoryManagerBtn, posBtn);
+
+            backBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    changeToFilestoreSelectPanel();
+                }
+            });
+
+            inventoryManagerBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFrame inventoryManager = new InventoryManager();
+                    inventoryManager.setVisible(true);
+                    Main.this.setVisible(false);
+                }
+            });
+
+            posBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFrame pos = new PointOfSale();
+                    pos.setVisible(true);
+                    Main.this.setVisible(false);
+                }
+            });
+
+
         }
 
         private void buildPanelGui(JButton backBtn, JButton inventoryManagerBtn, JButton posBtn) {
