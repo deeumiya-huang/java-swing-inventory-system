@@ -14,7 +14,9 @@ public class ProductBuilder {
     public ProductBuilder(){}
 
     public ProductBuilder id(String id) {
-        // todo: add restriction
+        if (!id.matches("^[a-zA-Z0-9]+$")) {
+            throw new BuilderException("ProductBuilder.id :: id must contain only alphanumeric characters (letters and numbers).");
+        }
         this.id = id;
         return this;
     }

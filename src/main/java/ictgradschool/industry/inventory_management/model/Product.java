@@ -25,6 +25,32 @@ public class Product {
     public double getUnitPrice() { return unitPrice; }
     public int getStock() { return stock; }
 
+    public void setId(String id) {
+        if (id.matches("^[a-zA-Z0-9]+$")) {
+            this.id = id;
+        }
+    }
+
+    public void setName(String name) {
+        if (name != null) {
+            this.name = name;
+        }
+    }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setUnitPrice(double unitPrice) {
+        if (unitPrice >= 0) {
+            this.unitPrice = unitPrice;
+        }
+    }
+
+    public void setStock(int stock) {
+        if (stock >= 0) {
+            this.stock = stock;
+        }
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(id);
