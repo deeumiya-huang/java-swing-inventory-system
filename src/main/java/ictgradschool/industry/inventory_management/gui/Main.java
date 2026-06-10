@@ -2,6 +2,7 @@ package ictgradschool.industry.inventory_management.gui;
 
 import ictgradschool.industry.inventory_management.admin.FilestoreManager;
 import ictgradschool.industry.inventory_management.model.Product;
+import ictgradschool.industry.inventory_management.model.Repository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,22 +12,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame {
+    /* The filestore for repository */
     private File file;
-    private List<Product> products;
+
+    private Repository repositoryModel;
 
     private final JPanel mainContainer;
     private final CardLayout cardLayout;
-    private final JPanel filestoreSelect;
-    private final JPanel systemSelect;
 
     public Main() {
+        repositoryModel = new Repository();
+
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
-        filestoreSelect = new FilestoreSelect();
-        systemSelect = new SystemSelect();
+        JPanel filestoreSelect = new FilestoreSelect();
+        JPanel systemSelect = new SystemSelect();
 
         buildGui(mainContainer, filestoreSelect, systemSelect);
     }
@@ -52,7 +56,8 @@ public class Main extends JFrame {
         cardLayout.show(mainContainer, "FILESTORE_PANEL");
     }
 
-    public class SystemSelect extends JPanel {
+    // todo: should I extract these two panel to a new class?
+    private class SystemSelect extends JPanel {
         JButton backBtn;
         JButton inventoryManagerBtn;
         JButton posBtn;
@@ -66,6 +71,7 @@ public class Main extends JFrame {
             backBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    repositoryModel = new Repository();
                     changeToFilestoreSelectPanel();
                 }
             });
@@ -87,8 +93,6 @@ public class Main extends JFrame {
                     Main.this.setVisible(false);
                 }
             });
-
-
         }
 
         private void buildPanelGui(JButton backBtn, JButton inventoryManagerBtn, JButton posBtn) {
@@ -108,7 +112,8 @@ public class Main extends JFrame {
         }
     }
 
-    public class FilestoreSelect extends JPanel {
+    private class FilestoreSelect extends JPanel {
+
         JButton newFileBtn;
         JButton existingFileBtn;
 
@@ -125,9 +130,11 @@ public class Main extends JFrame {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         file = fileChooser.getSelectedFile(); // todo: do I have to try catch here? But I already try catch in FilestoreManager
                         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
-                        products = FilestoreManager.readData(file); //todo: do i have to use worker doInBackground?
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                        changeToSystemSelectPanel();
+
+                        // load data in the background, and put into repository model when loading is done.
+                        Worker worker = new Worker();
+                        worker.execute();
+                        // change cursor back and change to systemSelectPanel will be execute in Worker.done();
                     }
                 }
             });
@@ -151,7 +158,7 @@ public class Main extends JFrame {
                                     "Confirm Overwrite",
                                     JOptionPane.YES_NO_OPTION,
                                     JOptionPane.WARNING_MESSAGE
-                                    );
+                            );
                             if (response == JOptionPane.NO_OPTION) {
                                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                                 return;
@@ -169,7 +176,6 @@ public class Main extends JFrame {
                         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                         file = selectedFile;
-                        products = new ArrayList<>();
                         changeToSystemSelectPanel();
                     }
                 }
@@ -187,6 +193,40 @@ public class Main extends JFrame {
 
             gbc.gridy = 1;
             add(existingFileBtn, gbc);
+        }
+
+        private class Worker extends SwingWorker<java.util.List<Product>, Void> {
+
+            @Override
+            protected java.util.List<Product> doInBackground() {
+                return FilestoreManager.readData(file);
+            }
+
+            @Override
+            protected void done() {
+                List<Product> data;
+                try {
+                    data = get();
+
+                    if (data == null) {
+                        // No data loaded.
+                        JOptionPane.showMessageDialog(
+                                Main.this,
+                                "Unable to load filestore. The data file is empty, missing or corrupt.",
+                                "Load error", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        // Populate the Repository model object with the loaded data.
+                        for (Product product : data) {
+                            repositoryModel.addProduct(product);
+                        }
+                        changeToSystemSelectPanel();
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                } finally {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
         }
     }
 
