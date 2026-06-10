@@ -1,7 +1,9 @@
 package ictgradschool.industry.inventory_management.admin;
 
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import ictgradschool.industry.inventory_management.model.Product;
 
+@JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
 public class ProductBuilder {
     private String id;
     private String name;
@@ -9,17 +11,7 @@ public class ProductBuilder {
     private double unitPrice;
     private int stock;
 
-    public ProductBuilder() {
-        this.reset();
-    }
-
-    public void reset() {
-        this.id = null;
-        this.name = null;
-        this.description = null;
-        this.unitPrice = 0;
-        this.stock = 0;
-    }
+    public ProductBuilder(){}
 
     public ProductBuilder id(String id) {
         // todo: add restriction
@@ -59,21 +51,11 @@ public class ProductBuilder {
         return this;
     }
 
-    public Product build(boolean shouldReset) throws BuilderException {
+    public Product build() throws BuilderException {
         if (this.id == null || this.name == null) {
             throw new BuilderException("ProductBuilder.build :: unable to construct Product without id or name.");
         }
 
-        Product p = new Product(this.id, this.name, this.description,this.unitPrice, this.stock);
-        if (shouldReset) {
-            this.reset();
-        }
-        return p;
+        return new Product(this.id, this.name, this.description, this.unitPrice, this.stock);
     }
-
-    public Product build() throws BuilderException {
-        return this.build(true);
-    }
-
-
 }

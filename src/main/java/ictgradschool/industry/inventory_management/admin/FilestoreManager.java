@@ -18,6 +18,7 @@ import java.util.List;
 public class FilestoreManager {
 
     public static List<Product> readData(File jsonFile) {
+        jsonFile = new File("io/output.json");
         List<Product> results = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         try {

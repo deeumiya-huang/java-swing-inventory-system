@@ -1,29 +1,37 @@
 package ictgradschool.industry.inventory_management.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ictgradschool.industry.inventory_management.admin.ProductBuilder;
+
+@JsonDeserialize(builder = ProductBuilder.class)
 public class Product {
-    public String productID;
-    public String productName;
-    public String productDescription;
-    public double unitPrice;
-    public int stock;
+    private String id;
+    private String name;
+    private String description;
+    private double unitPrice;
+    private int stock;
 
-    public Product(){}
-
-    public Product(String productID, String productName, String productDescription, double unitPrice, int stock) {
-        this.productID = productID;
-        this.productName = productName;
-        this.productDescription = productDescription;
+    public Product(String id, String name, String description, double unitPrice, int stock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
         this.unitPrice = unitPrice;
         this.stock = stock;
     }
 
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public double getUnitPrice() { return unitPrice; }
+    public int getStock() { return stock; }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(productID);
+        sb.append(id);
         sb.append(", ");
-        sb.append(productName);
+        sb.append(name);
         sb.append(", description: ");
-        sb.append(productDescription);
+        sb.append(description);
         sb.append(", unit price: ");
         sb.append(unitPrice);
         sb.append(", stock quantity: ");

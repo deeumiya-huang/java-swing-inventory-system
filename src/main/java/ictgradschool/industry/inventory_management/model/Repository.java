@@ -21,10 +21,10 @@ public class Repository implements Iterable<Product>{
 
     public void addProduct(Product product) {
         // todo: if the product ID already exist, modify to the new one, or reject?
-        if(products.containsKey(product.productID)) {
-            indexedProducts.remove(products.get(product.productID));
+        if(products.containsKey(product.getId())) {
+            indexedProducts.remove(products.get(product.getId()));
         }
-        products.put(product.productID, product);
+        products.put(product.getId(), product);
         indexedProducts.add(product);
     }
 
