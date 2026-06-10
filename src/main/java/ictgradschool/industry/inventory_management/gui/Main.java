@@ -17,9 +17,10 @@ import java.util.concurrent.ExecutionException;
 public class Main extends JFrame {
     /* The filestore for repository */
     private File file;
-
     private Repository repositoryModel;
 
+    private JFrame inventoryManager;
+    private JFrame pos;
     private final JPanel mainContainer;
     private final CardLayout cardLayout;
 
@@ -79,7 +80,7 @@ public class Main extends JFrame {
             inventoryManagerBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JFrame inventoryManager = new InventoryManager();
+                    inventoryManager = new InventoryManager(repositoryModel);
                     inventoryManager.setVisible(true);
                     Main.this.setVisible(false);
                 }
@@ -88,7 +89,7 @@ public class Main extends JFrame {
             posBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JFrame pos = new PointOfSale();
+                    pos = new PointOfSale(repositoryModel);
                     pos.setVisible(true);
                     Main.this.setVisible(false);
                 }
