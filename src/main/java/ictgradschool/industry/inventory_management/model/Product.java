@@ -1,7 +1,7 @@
 package ictgradschool.industry.inventory_management.model;
 
 public class Product {
-    public int productID;
+    public String productID;
     public String productName;
     public String productDescription;
     public double unitPrice;
@@ -9,7 +9,7 @@ public class Product {
 
     public Product(){}
 
-    public Product(int productID, String productName, String productDescription, double unitPrice, int stock) {
+    public Product(String productID, String productName, String productDescription, double unitPrice, int stock) {
         this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;

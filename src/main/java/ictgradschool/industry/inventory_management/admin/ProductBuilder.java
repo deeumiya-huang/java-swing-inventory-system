@@ -3,7 +3,7 @@ package ictgradschool.industry.inventory_management.admin;
 import ictgradschool.industry.inventory_management.model.Product;
 
 public class ProductBuilder {
-    private int id;
+    private String id;
     private String name;
     private String description;
     private double unitPrice;
@@ -14,14 +14,15 @@ public class ProductBuilder {
     }
 
     public void reset() {
-        this.id = 0;
+        this.id = null;
         this.name = null;
         this.description = null;
         this.unitPrice = 0;
         this.stock = 0;
     }
 
-    public ProductBuilder id(int id) {
+    public ProductBuilder id(String id) {
+        // todo: add restriction
         this.id = id;
         return this;
     }
@@ -59,7 +60,7 @@ public class ProductBuilder {
     }
 
     public Product build(boolean shouldReset) throws BuilderException {
-        if (this.id == 0 || this.name == null) {
+        if (this.id == null || this.name == null) {
             throw new BuilderException("ProductBuilder.build :: unable to construct Product without id or name.");
         }
 
