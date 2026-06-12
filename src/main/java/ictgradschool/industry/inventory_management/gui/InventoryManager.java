@@ -10,9 +10,9 @@ import java.awt.*;
 import java.io.File;
 
 public class InventoryManager extends JFrame {
-    private File file;
-    private Repository repository;
-    private JTable table;
+    private final File file;
+    private final Repository repository;
+    private final JTable table;
     public InventoryManager(Repository repository, File file) {
         this.file = file;
         this.repository = repository;
