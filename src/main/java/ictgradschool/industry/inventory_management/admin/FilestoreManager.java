@@ -1,7 +1,9 @@
 package ictgradschool.industry.inventory_management.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import ictgradschool.industry.inventory_management.model.Product;
@@ -31,15 +33,8 @@ public class FilestoreManager {
     public static void saveData(List<Product> products, File jsonFile) {
 
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResult = null;
         try {
-            jsonResult = mapper.writeValueAsString(products);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile))) {
-            writer.write(jsonResult);
+            mapper.writeValue(jsonFile, products);
             System.out.println("json file saved successfully!");
         } catch (IOException e) {
             throw new RuntimeException(e);
