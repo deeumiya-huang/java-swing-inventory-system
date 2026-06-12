@@ -18,7 +18,6 @@ import java.util.List;
 public class FilestoreManager {
 
     public static List<Product> readData(File jsonFile) {
-        jsonFile = new File("io/output.json");
         List<Product> results = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -29,8 +28,7 @@ public class FilestoreManager {
         return results;
     }
 
-    public static void saveData(List<Product> products) {
-        File file = new File("io/output.json");
+    public static void saveData(List<Product> products, File jsonFile) {
 
         ObjectMapper mapper = new ObjectMapper();
         String jsonResult = null;
@@ -40,7 +38,7 @@ public class FilestoreManager {
             throw new RuntimeException(e);
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile))) {
             writer.write(jsonResult);
             System.out.println("json file saved successfully!");
         } catch (IOException e) {

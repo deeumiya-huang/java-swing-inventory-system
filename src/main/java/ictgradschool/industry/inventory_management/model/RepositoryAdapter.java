@@ -58,7 +58,7 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
             case 4 -> product.setStock(Integer.parseInt(String.valueOf(aValue)));
             // todo: validate in setter, or use builder to modify exist product rather than setter?
         }
-        fireTableDataChanged();
+        fireTableCellUpdated(rowIndex,columnIndex);
         // todo: only fire cell change or all table? already exist product modification and add or remove data use different fire event?
     }
 

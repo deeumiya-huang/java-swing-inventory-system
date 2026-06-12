@@ -1,20 +1,23 @@
 package ictgradschool.industry.inventory_management.model;
 
 import java.util.ArrayList;
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Repository implements Iterable<Product>{
     // for quick search by id
-    private final Hashtable<String, Product> products;
+//    private final Hashtable<String, Product> products;
+    private final ConcurrentHashMap<String, Product> products;
     // for index search
     private final List<Product> indexedProducts;
 
     private final List<RepositoryListener> listeners;
 
     public Repository() {
-        products = new Hashtable<String, Product>();
+        products = new ConcurrentHashMap<>();
         indexedProducts = new ArrayList<>();
         listeners = new ArrayList<>();
     }
@@ -28,9 +31,20 @@ public class Repository implements Iterable<Product>{
         indexedProducts.add(product);
     }
 
+    public void removeProductAt(Product product) {
+        products.remove(product.getId());
+        indexedProducts.remove(product);
+
+        for (RepositoryListener listener : listeners) {
+            listener.repositoryHasChanged(this);
+        }
+    }
+
     public Product getProduct(String productID) {
         return products.get(productID);
     }
+
+    public List<Product> getAllProducts() { return indexedProducts;}
 
     public Product getProductAt(int index) {
         if (index < 0 || index >= products.size()) {

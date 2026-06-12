@@ -80,7 +80,7 @@ public class Main extends JFrame {
             inventoryManagerBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    inventoryManager = new InventoryManager(repositoryModel);
+                    inventoryManager = new InventoryManager(repositoryModel, file);
                     inventoryManager.setVisible(true);
                     Main.this.setVisible(false);
                 }
