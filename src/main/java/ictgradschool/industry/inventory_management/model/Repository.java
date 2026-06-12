@@ -27,6 +27,8 @@ public class Repository implements Iterable<Product>{
         }
         products.put(product.getId(), product);
         indexedProducts.add(product);
+
+        notifyListener();
     }
 
     public void removeProductAt(Product product) {

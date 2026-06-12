@@ -13,6 +13,7 @@ public class ProductBuilder {
 
     public ProductBuilder(){}
 
+    // todo: haven't write the restriction for 10 characters.
     public ProductBuilder id(String id) {
         if (!id.matches("^[a-zA-Z0-9]+$")) {
             throw new BuilderException("ProductBuilder.id :: id must contain only alphanumeric characters (letters and numbers).");
