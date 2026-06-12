@@ -112,7 +112,7 @@ public class InventoryManager extends JFrame {
             addProductDialog.setVisible(true);
 
             if (addProductDialog.isConfirmed()) {
-                Product newProduct = addProductDialog.getProduct();
+                Product newProduct = addProductDialog.getNewProduct();
                 repository.addProduct(newProduct);
                 FilestoreManager.saveData(repository.getAllProducts(), file);
             }
