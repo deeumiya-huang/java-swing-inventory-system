@@ -2,6 +2,7 @@ package ictgradschool.industry.inventory_management.model;
 
 import ictgradschool.industry.inventory_management.admin.FilestoreManager;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.io.File;
 import java.util.ArrayList;
@@ -56,17 +57,47 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
         // todo: change to model index when using row sorter
         Product product = repository.getProductAt(rowIndex);
 
-        switch (columnIndex) {
-            case 0 -> product.setId(String.valueOf(aValue));
-            case 1 -> product.setName(String.valueOf(aValue));
-            case 2 -> product.setDescription(String.valueOf(aValue));
-            case 3 -> product.setUnitPrice(Double.parseDouble(String.valueOf(aValue)));
-            case 4 -> product.setStock(Integer.parseInt(String.valueOf(aValue)));
-            // todo: validate in setter, or use builder to modify exist product rather than setter?
+        try {
+            switch (columnIndex) {
+                case 0 -> {
+                    String id = (String) aValue;
+                    if (!id.matches("^[a-zA-Z0-9]+$")) {
+                        throw new IllegalArgumentException("ID must contain alphanumeric characters only!");
+                    }
+                    product.setId(id);
+                }
+                case 1 -> {
+                    String name = (String) aValue;
+                    if (name == null || name.isBlank()) {
+                        throw new IllegalArgumentException("Product name cannot be empty!");
+                    }
+                    product.setName(name);
+                }
+                case 3 -> {
+                    double price = Double.parseDouble(aValue.toString());
+                    if (price < 0) {
+                        throw new IllegalArgumentException("Unit price cannot be less than 0!");
+                    }
+                    product.setUnitPrice(price);
+                }
+                case 4 -> {
+                    int stock = Integer.parseInt(aValue.toString());
+                    if (stock < 0) {
+                        throw new IllegalArgumentException("Stock cannot be less than 0!");
+                    }
+                    product.setStock(stock);
+                }
+            }
+            // todo: do we save Data directly here by pass file into this adapter.
+            FilestoreManager.saveData(repository.getAllProducts(), file);
+            fireTableCellUpdated(rowIndex, columnIndex);
+
+        } catch (NumberFormatException e) {
+            // todo: should I pass exception up to let Inventory manager deal with the error? but how to do that? pass InventoryManager into this adapter?
+            JOptionPane.showMessageDialog(null, "Please enter a valid numeric format!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
         }
-        // todo: do we save Data directly here by pass file into this adapter.
-        FilestoreManager.saveData(repository.getAllProducts(), file);
-        fireTableCellUpdated(rowIndex,columnIndex);
     }
 
     @Override
