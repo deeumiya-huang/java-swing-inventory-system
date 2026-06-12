@@ -17,7 +17,7 @@ public class InventoryManager extends JFrame {
         this.file = file;
         this.repository = repository;
         table = new JTable();
-        RepositoryAdapter tableModel = new RepositoryAdapter(repository);
+        RepositoryAdapter tableModel = new RepositoryAdapter(file, repository);
         table.setModel(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
 

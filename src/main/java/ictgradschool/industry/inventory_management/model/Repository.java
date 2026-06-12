@@ -33,9 +33,7 @@ public class Repository implements Iterable<Product>{
         products.remove(product.getId());
         indexedProducts.remove(product);
 
-        for (RepositoryListener listener : listeners) {
-            listener.repositoryHasChanged(this);
-        }
+        notifyListener();
     }
 
     public Product getProduct(String productID) {
@@ -65,5 +63,11 @@ public class Repository implements Iterable<Product>{
 
     public void removeRepositoryListener (RepositoryListener listener) {
         listeners.remove(listener);
+    }
+
+    public void notifyListener() {
+        for (RepositoryListener listener : listeners) {
+            listener.repositoryHasChanged(this);
+        }
     }
 }

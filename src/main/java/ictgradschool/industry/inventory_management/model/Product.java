@@ -3,6 +3,8 @@ package ictgradschool.industry.inventory_management.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ictgradschool.industry.inventory_management.admin.ProductBuilder;
 
+import java.util.Objects;
+
 @JsonDeserialize(builder = ProductBuilder.class)
 public class Product {
     private String id;
@@ -32,7 +34,7 @@ public class Product {
     }
 
     public void setName(String name) {
-        if (name != null) {
+        if (!Objects.equals(name, "")) {
             this.name = name;
         }
     }
