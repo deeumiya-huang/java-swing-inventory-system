@@ -48,6 +48,18 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
     }
 
     @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return switch (columnIndex) {
+            case 0 -> String.class;      // id
+            case 1 -> String.class;      // name
+            case 2 -> String.class;      // description
+            case 3 -> Double.class;      // unit price
+            case 4 -> Integer.class;     // stock
+            default -> Object.class;
+        };
+    }
+
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }
@@ -72,6 +84,10 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
                         throw new IllegalArgumentException("Product name cannot be empty!");
                     }
                     product.setName(name);
+                }
+                case 2 -> {
+                    String desc = (String) aValue;
+                    product.setDescription(desc);
                 }
                 case 3 -> {
                     double price = Double.parseDouble(aValue.toString());

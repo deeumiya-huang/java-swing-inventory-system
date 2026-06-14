@@ -6,35 +6,49 @@ import ictgradschool.industry.inventory_management.model.Repository;
 import ictgradschool.industry.inventory_management.model.RepositoryAdapter;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryManager extends JFrame {
     private final File file;
     private final Repository repository;
     private final JTable table;
-    private final RepositoryAdapter tableModel;
+    // for sorting
+    private final TableRowSorter<TableModel> sorter;
+
     public InventoryManager(Repository repository, File file) {
         this.file = file;
         this.repository = repository;
         // todo: consider extract a new JPanel for table
         // table for show products list
         table = new JTable();
-        tableModel = new RepositoryAdapter(file, repository);
+        RepositoryAdapter tableModel = new RepositoryAdapter(file, repository);
         table.setModel(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
 
-        // popup menu for delete product
+        sorter = new TableRowSorter<>(tableModel);
+        table.setRowSorter(sorter);
+
+        // add popup menu for delete product
+        deleteProductPopupMenu();
+
+        JPanel searchPanel = new SearchPanel();
+        JPanel buttonPanel = new ButtonPanel();
+
+        buildGui(table, searchPanel, buttonPanel);
+    }
+
+    private void deleteProductPopupMenu() {
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem deleteItem = new JMenuItem("Delete Product");
         popupMenu.add(deleteItem);
         table.setComponentPopupMenu(popupMenu);
         deleteItem.addActionListener(e -> deleteProduct());
-
-        JPanel searchPanel = new SearchPanel();
-        JPanel buttonPanel = new ButtonPanel();
-
-        buildGui(scrollPane, searchPanel, buttonPanel);
     }
 
     private void deleteProduct() {
@@ -67,10 +81,11 @@ public class InventoryManager extends JFrame {
         }
     }
 
-    private void buildGui(JScrollPane scrollPane, JPanel searchPanel, JPanel buttonPanel) {
+    private void buildGui(JTable table, JPanel searchPanel, JPanel buttonPanel) {
         setTitle("Inventory management");
         setLayout(new BorderLayout(10, 10));
 
+        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(0, 10, 0, 10),
                 scrollPane.getBorder() // get default border back, or it will disappear because of the empty border above
@@ -85,15 +100,108 @@ public class InventoryManager extends JFrame {
         setVisible(true);
     }
 
-    // todo: separate ui later
     private class SearchPanel extends JPanel {
+        private final JComboBox<String> searchFieldCombo;
+        private final JTextField searchField;
+        private final JComboBox<String> stockFilterCombo;
+
         public SearchPanel() {
-            setLayout(new BorderLayout(5,5));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-            JLabel searchLabel = new JLabel("Search Product:");
-            JTextField searchField = new JTextField();
-            add(searchLabel, BorderLayout.WEST);
-            add(searchField, BorderLayout.CENTER);
+            searchFieldCombo = new JComboBox<>(new String[]{"All Fields", "Id", "Name", "Description"});
+            searchField = new JTextField(15);
+            JButton clearButton = new JButton("Clear");
+            stockFilterCombo = new JComboBox<>(new String[]{"All items", "In Stock (>0)", "Out of Stock (=0)"});
+
+            searchField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override public void insertUpdate(DocumentEvent e) { applyFilters(); }
+                @Override public void removeUpdate(DocumentEvent e) { applyFilters(); }
+                @Override public void changedUpdate(DocumentEvent e) { applyFilters(); }
+            });
+
+            searchFieldCombo.addActionListener(e -> applyFilters());
+            stockFilterCombo.addActionListener(e -> applyFilters());
+
+            clearButton.addActionListener(e -> {
+                searchField.setText("");
+                searchFieldCombo.setSelectedIndex(0);
+                stockFilterCombo.setSelectedIndex(0);
+            });
+
+            buildPanelGui(searchFieldCombo, searchField ,clearButton, stockFilterCombo);
+        }
+
+        private void applyFilters() {
+            List<RowFilter<Object, Object>> filters = new ArrayList<>();
+
+            String searchText = searchField.getText().trim();
+            if (!searchText.isEmpty()) {
+                String regex = "(?i)" + searchText; // case-insensitive
+
+                int idCol = 0;
+                int nameCol = 1;
+                int descCol = 2;
+
+                int selectedSearchIndex = searchFieldCombo.getSelectedIndex();
+
+                switch (selectedSearchIndex) {
+                    case 1:
+                        filters.add(RowFilter.regexFilter(regex, idCol));
+                        break;
+                    case 2:
+                        filters.add(RowFilter.regexFilter(regex, nameCol));
+                        break;
+                    case 3:
+                        filters.add(RowFilter.regexFilter(regex, descCol));
+                        break;
+                    default:
+                        filters.add(RowFilter.regexFilter(regex, idCol, nameCol, descCol));
+                        break;
+                }
+            }
+
+            int filterIndex = stockFilterCombo.getSelectedIndex();
+            if (filterIndex == 1) {
+                filters.add(createStockFilter(true));
+            } else if (filterIndex == 2) {
+                filters.add(createStockFilter(false));
+            }
+
+            if (filters.isEmpty()) {
+                sorter.setRowFilter(null);
+            } else {
+                sorter.setRowFilter(RowFilter.andFilter(filters));
+            }
+
+        }
+
+        private RowFilter<Object, Object> createStockFilter(boolean inStock) {
+            return new RowFilter<Object, Object>() {
+                @Override
+                public boolean include(Entry<?, ?> entry) {
+                    int stockCol = 4;
+                    Object value = entry.getValue(stockCol);
+                    int stock = Integer.parseInt(value.toString());
+
+                    if (inStock) {
+                        return stock > 0;
+                    } else {
+                        return stock == 0;
+                    }
+                }
+            };
+        }
+
+        private void buildPanelGui(JComboBox<String> searchFieldCombo, JTextField searchField, JButton clearButton, JComboBox<String> stockFilterCombo) {
+            setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+            setBorder(BorderFactory.createEmptyBorder(10,5,0,5));
+
+            add(new JLabel("Search By:"));
+            add(searchFieldCombo);
+            add(searchField);
+            add(clearButton);
+
+            add(Box.createHorizontalStrut(20));
+            add(new JLabel("Stock Status:"));
+            add(stockFilterCombo);
         }
     }
 
