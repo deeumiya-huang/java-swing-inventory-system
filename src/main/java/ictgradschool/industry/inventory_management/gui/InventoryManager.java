@@ -11,18 +11,21 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryManager extends JFrame {
+    private final JFrame main;
     private final File file;
     private final Repository repository;
     private final JTable table;
     // for sorting
     private final TableRowSorter<TableModel> sorter;
 
-    public InventoryManager(Repository repository, File file) {
+    public InventoryManager(JFrame main, Repository repository, File file) {
+        this.main = main;
         this.file = file;
         this.repository = repository;
         // todo: consider extract a new JPanel for table
@@ -39,8 +42,22 @@ public class InventoryManager extends JFrame {
 
         JPanel searchPanel = new SearchPanel();
         JPanel buttonPanel = new ButtonPanel();
+        JMenuBar menuBar = createMenuBar();
 
-        buildGui(table, searchPanel, buttonPanel);
+        buildGui(table, searchPanel, buttonPanel, menuBar);
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem item;
+        menu.add(item = new JMenuItem(new BackToWelcomeAction()));
+
+        menu.addSeparator();
+        menu.add(item = new JMenuItem(new ExitAction()));
+        menuBar.add(menu);
+
+        return menuBar;
     }
 
     private void deleteProductPopupMenu() {
@@ -81,9 +98,10 @@ public class InventoryManager extends JFrame {
         }
     }
 
-    private void buildGui(JTable table, JPanel searchPanel, JPanel buttonPanel) {
+    private void buildGui(JTable table, JPanel searchPanel, JPanel buttonPanel, JMenuBar menuBar) {
         setTitle("Inventory management");
         setLayout(new BorderLayout(10, 10));
+        setJMenuBar(menuBar);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
@@ -224,6 +242,30 @@ public class InventoryManager extends JFrame {
                 repository.addProduct(newProduct);
                 FilestoreManager.saveData(repository.getAllProducts(), file);
             }
+        }
+    }
+
+    private class ExitAction extends AbstractAction {
+        public ExitAction() {
+            putValue(Action.NAME, "Exit");
+            putValue(Action.SHORT_DESCRIPTION, "Exit the application");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+    }
+
+    private class BackToWelcomeAction extends AbstractAction {
+        public BackToWelcomeAction() {
+            putValue(Action.NAME, "Back to Welcome Screen");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            InventoryManager.this.dispose();
+            main.setVisible(true);
         }
     }
 }
