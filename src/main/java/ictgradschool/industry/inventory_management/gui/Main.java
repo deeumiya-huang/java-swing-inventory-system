@@ -129,7 +129,7 @@ public class Main extends JFrame {
                     JFileChooser fileChooser = new JFileChooser();
                     int returnVal = fileChooser.showOpenDialog(Main.this);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        file = fileChooser.getSelectedFile(); // todo: do I have to try catch here? But I already try catch in FilestoreManager
+                        file = fileChooser.getSelectedFile();
                         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
 
                         // load data in the background, and put into repository model when loading is done.
@@ -197,7 +197,7 @@ public class Main extends JFrame {
         }
 
         private class Worker extends SwingWorker<java.util.List<Product>, Void> {
-
+            // todo: do I have to try catch here? But I already try catch in FilestoreManager
             @Override
             protected java.util.List<Product> doInBackground() {
                 return FilestoreManager.readData(file);

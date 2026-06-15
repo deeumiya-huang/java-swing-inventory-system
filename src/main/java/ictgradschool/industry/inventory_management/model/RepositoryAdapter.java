@@ -66,7 +66,7 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        // todo: change to model index when using row sorter
+        // todo: it will automatically change to model index when using row sorter?
         Product product = repository.getProductAt(rowIndex);
 
         try {
