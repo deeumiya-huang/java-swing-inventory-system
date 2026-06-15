@@ -5,6 +5,7 @@ import ictgradschool.industry.inventory_management.model.Product;
 import ictgradschool.industry.inventory_management.model.Repository;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +73,8 @@ public class Main extends JFrame {
             backBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    // reset file and repo
+                    file = null; // todo: is that right?
                     repositoryModel = new Repository();
                     changeToFilestoreSelectPanel();
                 }
@@ -127,6 +130,8 @@ public class Main extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JFileChooser fileChooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON file only (*.json)", "json");
+                    fileChooser.setFileFilter(filter);
                     int returnVal = fileChooser.showOpenDialog(Main.this);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         file = fileChooser.getSelectedFile();
