@@ -6,7 +6,6 @@ import ictgradschool.industry.inventory_management.model.Product;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilestoreManager {

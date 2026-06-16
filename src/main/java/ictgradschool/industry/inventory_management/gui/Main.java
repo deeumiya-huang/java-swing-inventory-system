@@ -1,9 +1,6 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.admin.FilestoreManager;
-import ictgradschool.industry.inventory_management.model.Product;
 import ictgradschool.industry.inventory_management.model.Repository;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -65,32 +62,22 @@ public class Main extends JFrame {
             posBtn = new JButton("Open Point of Sale");
             buildPanelGui(backBtn, inventoryManagerBtn, posBtn);
 
-            backBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // reset repo
-//                    file = null;
-                    repositoryModel = null;
-                    changeToFilestoreSelectPanel();
-                }
+            backBtn.addActionListener(e -> {
+                // reset repo
+                repositoryModel = null;
+                changeToFilestoreSelectPanel();
             });
 
-            inventoryManagerBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    inventoryManager = new InventoryManager(Main.this, repositoryModel);
-                    inventoryManager.setVisible(true);
-                    Main.this.setVisible(false);
-                }
+            inventoryManagerBtn.addActionListener(e -> {
+                inventoryManager = new InventoryManager(Main.this, repositoryModel);
+                inventoryManager.setVisible(true);
+                Main.this.setVisible(false);
             });
 
-            posBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    pos = new PointOfSale(repositoryModel);
-                    pos.setVisible(true);
-                    Main.this.setVisible(false);
-                }
+            posBtn.addActionListener(e -> {
+                pos = new PointOfSale(repositoryModel);
+                pos.setVisible(true);
+                Main.this.setVisible(false);
             });
         }
 
@@ -121,66 +108,60 @@ public class Main extends JFrame {
             existingFileBtn = new JButton("Select an existing filestore");
             buildPanelGui(newFileBtn, existingFileBtn);
 
-            existingFileBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON file only (*.json)", "json");
-                    fileChooser.setFileFilter(filter);
-                    int returnVal = fileChooser.showOpenDialog(Main.this);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File file = fileChooser.getSelectedFile();
-                        // pass file path into repository for saving data.
-                        repositoryModel = new Repository(file);
-                        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
+            existingFileBtn.addActionListener(e -> {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON file only (*.json)", "json");
+                fileChooser.setFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(Main.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    // pass file path into repository for saving data.
+                    repositoryModel = new Repository(file);
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
 
-                        // load data in the background, and put into repository model when loading is done.
-                        Worker worker = new Worker();
-                        worker.execute();
-                        // change cursor back and change to systemSelectPanel will be execute in Worker.done();
-                    }
+                    // load data in the background, and put into repository model when loading is done.
+                    Worker worker = new Worker();
+                    worker.execute();
+                    // change cursor back and change to systemSelectPanel will be execute in Worker.done();
                 }
             });
 
-            newFileBtn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    int returnVal = fileChooser.showSaveDialog(Main.this);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        // if user forget to type ".json", add it on automatically
-                        if (!selectedFile.getName().endsWith(".json")) {
-                            selectedFile = new File(selectedFile.getAbsolutePath() + ".json");
-                        }
-                        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-                        if (selectedFile.exists()) {
-                            int response = JOptionPane.showConfirmDialog(Main.this,
-                                    "The file already exists! Would you like to overwrite it and create a new filestore? (Note: Old data will be lost)",
-                                    "Confirm Overwrite",
-                                    JOptionPane.YES_NO_OPTION,
-                                    JOptionPane.WARNING_MESSAGE
-                            );
-                            if (response == JOptionPane.NO_OPTION) {
-                                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                                return;
-                            }
-                        } else {
-                            try {
-                                boolean isCreated = selectedFile.createNewFile();
-                                if (!isCreated) {
-                                    throw  new IOException("Failed to create a new file.");
-                                }
-                            } catch (IOException exception) {
-                                exception.printStackTrace();
-                            }
-                        }
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-                        repositoryModel = new Repository(selectedFile);
-                        changeToSystemSelectPanel();
+            newFileBtn.addActionListener(e -> {
+                JFileChooser fileChooser = new JFileChooser();
+                int returnVal = fileChooser.showSaveDialog(Main.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    // if user forget to type ".json", add it on automatically
+                    if (!selectedFile.getName().endsWith(".json")) {
+                        selectedFile = new File(selectedFile.getAbsolutePath() + ".json");
                     }
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+                    if (selectedFile.exists()) {
+                        int response = JOptionPane.showConfirmDialog(Main.this,
+                                "The file already exists! Would you like to overwrite it and create a new filestore? (Note: Old data will be lost)",
+                                "Confirm Overwrite",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.WARNING_MESSAGE
+                        );
+                        if (response == JOptionPane.NO_OPTION) {
+                            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                            return;
+                        }
+                    } else {
+                        try {
+                            boolean isCreated = selectedFile.createNewFile();
+                            if (!isCreated) {
+                                throw  new IOException("Failed to create a new file.");
+                            }
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+                    }
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                    repositoryModel = new Repository(selectedFile);
+                    changeToSystemSelectPanel();
                 }
             });
         }

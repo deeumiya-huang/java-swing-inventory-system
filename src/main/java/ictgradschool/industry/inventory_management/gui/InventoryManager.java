@@ -1,6 +1,5 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.admin.FilestoreManager;
 import ictgradschool.industry.inventory_management.model.Product;
 import ictgradschool.industry.inventory_management.model.Repository;
 import ictgradschool.industry.inventory_management.model.RepositoryAdapter;
@@ -11,8 +10,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,7 +174,7 @@ public class InventoryManager extends JFrame {
         }
 
         private RowFilter<Object, Object> createStockFilter(boolean inStock) {
-            return new RowFilter<Object, Object>() {
+            return new RowFilter<>() {
                 @Override
                 public boolean include(Entry<?, ?> entry) {
                     int stockCol = 4;

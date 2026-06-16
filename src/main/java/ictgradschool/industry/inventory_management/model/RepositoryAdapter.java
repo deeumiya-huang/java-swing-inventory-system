@@ -1,10 +1,7 @@
 package ictgradschool.industry.inventory_management.model;
 
-import ictgradschool.industry.inventory_management.admin.FilestoreManager;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

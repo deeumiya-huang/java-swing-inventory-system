@@ -12,11 +12,10 @@ public class MyMenuBar extends JMenuBar {
         this.currentFrame = currentFrame;
         this.mainFrame = mainFrame;
         JMenu menu = new JMenu("Menu");
-        JMenuItem item;
-        menu.add(item = new JMenuItem(new BackToWelcomeAction()));
+        menu.add(new JMenuItem(new BackToWelcomeAction()));
 
         menu.addSeparator();
-        menu.add(item = new JMenuItem(new ExitAction()));
+        menu.add(new JMenuItem(new ExitAction()));
         add(menu);
     }
 
