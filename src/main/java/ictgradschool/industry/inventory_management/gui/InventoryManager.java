@@ -42,22 +42,9 @@ public class InventoryManager extends JFrame {
 
         JPanel searchPanel = new SearchPanel();
         JPanel buttonPanel = new ButtonPanel();
-        JMenuBar menuBar = createMenuBar();
+        JMenuBar menuBar = new MyMenuBar(this, main);
 
         buildGui(table, searchPanel, buttonPanel, menuBar);
-    }
-
-    private JMenuBar createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Menu");
-        JMenuItem item;
-        menu.add(item = new JMenuItem(new BackToWelcomeAction()));
-
-        menu.addSeparator();
-        menu.add(item = new JMenuItem(new ExitAction()));
-        menuBar.add(menu);
-
-        return menuBar;
     }
 
     private void deleteProductPopupMenu() {
@@ -242,30 +229,6 @@ public class InventoryManager extends JFrame {
                 repository.addProduct(newProduct);
                 FilestoreManager.saveData(repository.getAllProducts(), file);
             }
-        }
-    }
-
-    private class ExitAction extends AbstractAction {
-        public ExitAction() {
-            putValue(Action.NAME, "Exit");
-            putValue(Action.SHORT_DESCRIPTION, "Exit the application");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            System.exit(0);
-        }
-    }
-
-    private class BackToWelcomeAction extends AbstractAction {
-        public BackToWelcomeAction() {
-            putValue(Action.NAME, "Back to Welcome Screen");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            InventoryManager.this.dispose();
-            main.setVisible(true);
         }
     }
 }
