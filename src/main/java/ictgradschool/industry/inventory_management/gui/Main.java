@@ -12,12 +12,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame {
     /* The filestore for repository */
-    private File file;
     private Repository repositoryModel;
 
     private JFrame inventoryManager;
@@ -56,7 +54,6 @@ public class Main extends JFrame {
         cardLayout.show(mainContainer, "FILESTORE_PANEL");
     }
 
-    // todo: should I extract these two panel to a new class?
     private class SystemSelect extends JPanel {
         JButton backBtn;
         JButton inventoryManagerBtn;
@@ -72,7 +69,7 @@ public class Main extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // reset repo
-                    file = null;
+//                    file = null;
                     repositoryModel = null;
                     changeToFilestoreSelectPanel();
                 }
@@ -81,7 +78,7 @@ public class Main extends JFrame {
             inventoryManagerBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    inventoryManager = new InventoryManager(Main.this, repositoryModel, file);
+                    inventoryManager = new InventoryManager(Main.this, repositoryModel);
                     inventoryManager.setVisible(true);
                     Main.this.setVisible(false);
                 }
@@ -132,7 +129,7 @@ public class Main extends JFrame {
                     fileChooser.setFileFilter(filter);
                     int returnVal = fileChooser.showOpenDialog(Main.this);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        file = fileChooser.getSelectedFile();
+                        File file = fileChooser.getSelectedFile();
                         // pass file path into repository for saving data.
                         repositoryModel = new Repository(file);
                         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
@@ -201,28 +198,25 @@ public class Main extends JFrame {
             add(existingFileBtn, gbc);
         }
 
-        private class Worker extends SwingWorker<List<Product>, Void> {
+        private class Worker extends SwingWorker<Integer, Void> {
             @Override
-            protected List<Product> doInBackground() {
-                return FilestoreManager.readData(file);
+            protected Integer doInBackground() {
+                return repositoryModel.loadData();
             }
 
             @Override
             protected void done() {
                 try {
-                    List<Product> data = get();
+                    int result = get();
 
-                    if (data == null) {
+                    if (result == -1) {
                         // No data loaded.
                         JOptionPane.showMessageDialog(
                                 Main.this,
                                 "Unable to load filestore. The data file is empty, missing or corrupt.",
                                 "Load error", JOptionPane.WARNING_MESSAGE);
                     } else {
-                        // Populate the Repository model object with the loaded data.
-                        for (Product product : data) {
-                            repositoryModel.addProduct(product);
-                        }
+                        // data successfully loaded.
                         changeToSystemSelectPanel();
                     }
                 } catch (InterruptedException | ExecutionException e) {

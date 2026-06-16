@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryAdapter extends AbstractTableModel implements RepositoryListener{
-    private final File file;
     private final Repository repository;
     private final List<String> columnNames = new ArrayList<>(List.of("id", "name", "description", "unit price", "stock"));
 
-    public RepositoryAdapter(File file, Repository repository) {
-        this.file = file;
+    public RepositoryAdapter(Repository repository) {
         this.repository = repository;
         repository.addRepositoryListener(this);
     }
@@ -73,7 +71,7 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
             switch (columnIndex) {
                 case 0 -> {
                     String id = (String) aValue;
-                    if (!id.matches("^[a-zA-Z0-9]+$")) {
+                    if (!id.matches("^[a-zA-Z0-9]{10}$")) {
                         throw new IllegalArgumentException("ID must contain alphanumeric characters only!");
                     }
                     product.setId(id);
@@ -104,8 +102,8 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
                     product.setStock(stock);
                 }
             }
-            // todo: do we save Data directly here by pass file into this adapter.
-            FilestoreManager.saveData(repository.getAllProducts(), file);
+            // save data to filestore
+            repository.save();
             fireTableCellUpdated(rowIndex, columnIndex);
 
         } catch (NumberFormatException e) {

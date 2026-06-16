@@ -17,21 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryManager extends JFrame {
-    private final JFrame main;
-    private final File file;
     private final Repository repository;
     private final JTable table;
     // for sorting
     private final TableRowSorter<TableModel> sorter;
 
-    public InventoryManager(JFrame main, Repository repository, File file) {
-        this.main = main;
-        this.file = file;
+    public InventoryManager(JFrame main, Repository repository) {
         this.repository = repository;
         // todo: consider extract a new JPanel for table
         // table for show products list
         table = new JTable();
-        RepositoryAdapter tableModel = new RepositoryAdapter(file, repository);
+        RepositoryAdapter tableModel = new RepositoryAdapter(repository);
         table.setModel(tableModel);
 
         sorter = new TableRowSorter<>(tableModel);
@@ -62,6 +58,8 @@ public class InventoryManager extends JFrame {
         if (selectedRow != -1) {
             // convert to the real index in Model, because row sorter will change the order.
             int modelRow = table.convertRowIndexToModel(selectedRow);
+            // todo:
+            String deleteId = (String)table.getValueAt(selectedRow, 0);
 
             Product selectedProduct = repository.getProductAt(modelRow);
             String productId = selectedProduct.getId();

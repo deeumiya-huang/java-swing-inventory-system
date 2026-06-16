@@ -29,6 +29,22 @@ public class Repository implements Iterable<Product>{
         FilestoreManager.saveData(this.indexedProducts, this.file);
     }
 
+    //todo: check this.
+
+    /* return -1 when load data failed, return 1 when success. */
+    public int loadData() {
+        List<Product> data = FilestoreManager.readData(this.file);
+        if (data == null) {
+            return -1;
+        } else {
+            // Populate products list with the loaded data.
+            for (Product product : data) {
+                addProduct(product);
+            }
+            return 1;
+        }
+    }
+
     public void addProduct(Product product) {
         // todo: if the product ID already exist, modify to the new one, or reject?
         if(products.containsKey(product.getId())) {
