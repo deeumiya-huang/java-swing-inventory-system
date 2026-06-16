@@ -14,11 +14,12 @@ public class Product {
     private int stock;
 
     public Product(String id, String name, String description, double unitPrice, int stock) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.unitPrice = unitPrice;
-        this.stock = stock;
+        // force builder to use setter to validate. todo: check
+        setId(id);
+        setName(name);
+        setDescription(description);
+        setUnitPrice(unitPrice);
+        setStock(stock);
     }
 
     public String getId() { return id; }
@@ -27,30 +28,35 @@ public class Product {
     public double getUnitPrice() { return unitPrice; }
     public int getStock() { return stock; }
 
+    // put validation in setter
     public void setId(String id) {
-        if (id.matches("^[a-zA-Z0-9]+$")) {
-            this.id = id;
+        if (id == null || !id.matches("^[a-zA-Z0-9]{10}$")) {
+            throw new IllegalArgumentException("ID must contain exactly 10 alphanumeric characters!");
         }
+        this.id = id;
     }
 
     public void setName(String name) {
-        if (!Objects.equals(name, "")) {
-            this.name = name;
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Product name cannot be empty!");
         }
+        this.name = name;
     }
 
     public void setDescription(String description) { this.description = description; }
 
     public void setUnitPrice(double unitPrice) {
-        if (unitPrice >= 0) {
-            this.unitPrice = unitPrice;
+        if (unitPrice < 0) {
+            throw new IllegalArgumentException("Unit price cannot be less than 0!");
         }
+        this.unitPrice = unitPrice;
     }
 
     public void setStock(int stock) {
-        if (stock >= 0) {
-            this.stock = stock;
+        if (stock < 0) {
+            throw new IllegalArgumentException("Stock cannot be less than 0!");
         }
+        this.stock = stock;
     }
 
     public String toString() {

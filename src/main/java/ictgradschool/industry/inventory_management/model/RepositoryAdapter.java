@@ -61,50 +61,22 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        // todo: it will automatically change to model index when using row sorter?
+        // it will automatically change to model index when using row sorter, so we don't have to change it to model index manually.
         Product product = repository.getProductAt(rowIndex);
 
         try {
             switch (columnIndex) {
-                case 0 -> {
-                    String id = (String) aValue;
-                    if (!id.matches("^[a-zA-Z0-9]{10}$")) {
-                        throw new IllegalArgumentException("ID must contain alphanumeric characters only!");
-                    }
-                    product.setId(id);
-                }
-                case 1 -> {
-                    String name = (String) aValue;
-                    if (name == null || name.isBlank()) {
-                        throw new IllegalArgumentException("Product name cannot be empty!");
-                    }
-                    product.setName(name);
-                }
-                case 2 -> {
-                    String desc = (String) aValue;
-                    product.setDescription(desc);
-                }
-                case 3 -> {
-                    double price = Double.parseDouble(aValue.toString());
-                    if (price < 0) {
-                        throw new IllegalArgumentException("Unit price cannot be less than 0!");
-                    }
-                    product.setUnitPrice(price);
-                }
-                case 4 -> {
-                    int stock = Integer.parseInt(aValue.toString());
-                    if (stock < 0) {
-                        throw new IllegalArgumentException("Stock cannot be less than 0!");
-                    }
-                    product.setStock(stock);
-                }
+                case 0 -> product.setId((String) aValue);
+                case 1 -> product.setName((String) aValue);
+                case 2 -> product.setDescription((String) aValue);
+                case 3 -> product.setUnitPrice(Double.parseDouble(aValue.toString()));
+                case 4 -> product.setStock(Integer.parseInt(aValue.toString()));
             }
-            // save data to filestore
+            // if no exception was caught, save data to filestore
             repository.save();
             fireTableCellUpdated(rowIndex, columnIndex);
 
         } catch (NumberFormatException e) {
-            // todo: should I pass exception up to let Inventory manager deal with the error? but how to do that? pass InventoryManager into this adapter?
             JOptionPane.showMessageDialog(null, "Please enter a valid numeric format!", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);

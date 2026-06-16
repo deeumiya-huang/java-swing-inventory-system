@@ -13,20 +13,12 @@ public class ProductBuilder {
 
     public ProductBuilder(){}
 
-    // todo: haven't write the restriction for 10 characters.
     public ProductBuilder id(String id) {
-        if (!id.matches("^[a-zA-Z0-9]+$")) {
-            throw new BuilderException("ProductBuilder.id :: id must contain only alphanumeric characters (letters and numbers).");
-        }
         this.id = id;
         return this;
     }
 
-    public ProductBuilder name(String name) throws BuilderException{
-        if (name == null) {
-            throw new BuilderException("ProductBuilder.name :: value for name cannot be null");
-        }
-
+    public ProductBuilder name(String name) {
         this.name = name;
         return this;
     }
@@ -36,29 +28,22 @@ public class ProductBuilder {
         return this;
     }
 
-    public ProductBuilder unitPrice(double unitPrice) throws BuilderException{
-        if (unitPrice < 0) {
-            throw new BuilderException("ProductBuilder.unitPrice :: value for unitPrice has to be positive");
-        }
-
+    public ProductBuilder unitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
         return this;
     }
 
-    public ProductBuilder stock(int stock) throws BuilderException{
-        if (stock < 0) {
-            throw new BuilderException("ProductBuilder.stock :: value for stock has to be positive");
-        }
-
+    public ProductBuilder stock(int stock) {
         this.stock = stock;
         return this;
     }
 
     public Product build() throws BuilderException {
-        if (this.id == null || this.name == null) {
-            throw new BuilderException("ProductBuilder.build :: unable to construct Product without id or name.");
+        try {
+            return new Product(this.id, this.name, this.description, this.unitPrice, this.stock);
+        } catch (IllegalArgumentException e){
+            throw new BuilderException("ProductBuilder.build :: " + e.getMessage(), e);
+            // todo: delete builder exception?
         }
-
-        return new Product(this.id, this.name, this.description, this.unitPrice, this.stock);
     }
 }

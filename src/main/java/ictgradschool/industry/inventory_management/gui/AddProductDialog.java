@@ -57,7 +57,8 @@ public class AddProductDialog extends JDialog {
         String stockStr = stockField.getText();
 
         if (id.isBlank() || name.isBlank() || priceStr.isBlank() || stockStr.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            // todo: but this can show up
+            JOptionPane.showMessageDialog(getOwner(), "Please fill in all required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -77,9 +78,11 @@ public class AddProductDialog extends JDialog {
             dispose(); // close dialog
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Price and Stock must be valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            //todo: why I pass this or getOwner() can't show up.
+            JOptionPane.showMessageDialog(null, "Price and Stock must be valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
     private void formPanelUI(JPanel formPanel) {
