@@ -53,14 +53,8 @@ public class InventoryManager extends JFrame {
 
         // if any row has been chosen, then execute.
         if (selectedRow != -1) {
-            // convert to the real index in Model, because row sorter will change the order.
-            int modelRow = table.convertRowIndexToModel(selectedRow);
-            // todo:
-            String deleteId = (String)table.getValueAt(selectedRow, 0);
-
-            Product selectedProduct = repository.getProductAt(modelRow);
-            String productId = selectedProduct.getId();
-            String productName = selectedProduct.getName();
+            String productId = (String)table.getValueAt(selectedRow, 0);
+            String productName = (String)table.getValueAt(selectedRow, 1);
             String message = String.format(
                 "Are you sure you want to delete this product?\n\nID: %s\nName: %s",
                 productId, productName
@@ -74,8 +68,8 @@ public class InventoryManager extends JFrame {
             );
 
             if (answer == JOptionPane.YES_OPTION) {
-                repository.removeProductAt(selectedProduct);
-                repository.save();
+                repository.removeProductBy(productId);
+                repository.save(); //todo: should I save here? or let repository.removeProduct() call save()?
             }
         }
     }
@@ -221,8 +215,12 @@ public class InventoryManager extends JFrame {
 
             if (addProductDialog.isConfirmed()) {
                 Product newProduct = addProductDialog.getNewProduct();
-                repository.addProduct(newProduct);
-                repository.save();
+                try {
+                    repository.addProduct(newProduct);
+                    repository.save();
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(InventoryManager.this, e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }

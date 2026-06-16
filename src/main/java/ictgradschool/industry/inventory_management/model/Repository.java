@@ -46,9 +46,9 @@ public class Repository implements Iterable<Product>{
     }
 
     public void addProduct(Product product) {
-        // todo: if the product ID already exist, modify to the new one, or reject?
+        // if the product ID already exist, reject it.
         if(products.containsKey(product.getId())) {
-            indexedProducts.remove(products.get(product.getId()));
+            throw new IllegalArgumentException("ID has already been used!");
         }
         products.put(product.getId(), product);
         indexedProducts.add(product);
@@ -56,11 +56,12 @@ public class Repository implements Iterable<Product>{
         notifyListener();
     }
 
-    public void removeProductAt(Product product) {
-        products.remove(product.getId());
-        indexedProducts.remove(product);
-
-        notifyListener();
+    public void removeProductBy(String productId) {
+        Product removedProduct = products.remove(productId);
+        if (removedProduct != null) {
+            indexedProducts.remove(removedProduct);
+            notifyListener();
+        }
     }
 
     public Product getProduct(String productID) {
