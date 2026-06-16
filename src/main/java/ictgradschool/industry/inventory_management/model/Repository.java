@@ -1,23 +1,32 @@
 package ictgradschool.industry.inventory_management.model;
 
+import ictgradschool.industry.inventory_management.admin.FilestoreManager;
+
+import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Repository implements Iterable<Product>{
+    private final File file;
     // for quick search by id
-//    private final Hashtable<String, Product> products;
     private final ConcurrentHashMap<String, Product> products;
     // for index search
     private final List<Product> indexedProducts;
 
     private final List<RepositoryListener> listeners;
 
-    public Repository() {
+    public Repository(File file) {
+        this.file = file;
         products = new ConcurrentHashMap<>();
         indexedProducts = new ArrayList<>();
         listeners = new ArrayList<>();
+    }
+
+    public void save(){
+        FilestoreManager.saveData(this.indexedProducts, this.file);
     }
 
     public void addProduct(Product product) {
@@ -41,7 +50,7 @@ public class Repository implements Iterable<Product>{
     public Product getProduct(String productID) {
         return products.get(productID);
     }
-
+    // todo: delete it if not used finally
     public List<Product> getAllProducts() { return indexedProducts;}
 
     public Product getProductAt(int index) {

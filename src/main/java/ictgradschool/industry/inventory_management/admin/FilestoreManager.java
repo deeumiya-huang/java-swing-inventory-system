@@ -17,7 +17,8 @@ public class FilestoreManager {
         try {
             results = mapper.readValue(jsonFile, new TypeReference<List<Product>>() {});
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //catch null outside to let user know didn't readData successfully.
+            return null;
         }
         return results;
     }

@@ -26,8 +26,6 @@ public class Main extends JFrame {
     private final CardLayout cardLayout;
 
     public Main() {
-        repositoryModel = new Repository();
-
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
@@ -73,9 +71,9 @@ public class Main extends JFrame {
             backBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // reset file and repo
-                    file = null; // todo: is that right?
-                    repositoryModel = new Repository();
+                    // reset repo
+                    file = null;
+                    repositoryModel = null;
                     changeToFilestoreSelectPanel();
                 }
             });
@@ -135,6 +133,8 @@ public class Main extends JFrame {
                     int returnVal = fileChooser.showOpenDialog(Main.this);
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         file = fileChooser.getSelectedFile();
+                        // pass file path into repository for saving data.
+                        repositoryModel = new Repository(file);
                         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)); // change cursor to waiting mode to let user know that the file is loading.
 
                         // load data in the background, and put into repository model when loading is done.
@@ -181,7 +181,7 @@ public class Main extends JFrame {
                         }
                         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-                        file = selectedFile;
+                        repositoryModel = new Repository(selectedFile);
                         changeToSystemSelectPanel();
                     }
                 }
@@ -201,18 +201,16 @@ public class Main extends JFrame {
             add(existingFileBtn, gbc);
         }
 
-        private class Worker extends SwingWorker<java.util.List<Product>, Void> {
-            // todo: do I have to try catch here? But I already try catch in FilestoreManager
+        private class Worker extends SwingWorker<List<Product>, Void> {
             @Override
-            protected java.util.List<Product> doInBackground() {
+            protected List<Product> doInBackground() {
                 return FilestoreManager.readData(file);
             }
 
             @Override
             protected void done() {
-                List<Product> data;
                 try {
-                    data = get();
+                    List<Product> data = get();
 
                     if (data == null) {
                         // No data loaded.

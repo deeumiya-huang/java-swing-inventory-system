@@ -80,7 +80,7 @@ public class InventoryManager extends JFrame {
 
             if (answer == JOptionPane.YES_OPTION) {
                 repository.removeProductAt(selectedProduct);
-                FilestoreManager.saveData(repository.getAllProducts(), file);
+                repository.save();
             }
         }
     }
@@ -227,7 +227,7 @@ public class InventoryManager extends JFrame {
             if (addProductDialog.isConfirmed()) {
                 Product newProduct = addProductDialog.getNewProduct();
                 repository.addProduct(newProduct);
-                FilestoreManager.saveData(repository.getAllProducts(), file);
+                repository.save();
             }
         }
     }
