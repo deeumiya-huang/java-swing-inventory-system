@@ -75,6 +75,7 @@ public class Repository implements Iterable<Product>{
         }
     }
 
+    /* repository can be used in for loop. -> for (Product product : repository) */
     @Override
     public Iterator<Product> iterator() {
         return indexedProducts.iterator();

@@ -21,7 +21,7 @@ public class InventoryManager extends JFrame {
 
     public InventoryManager(JFrame main, Repository repository) {
         this.repository = repository;
-        // todo: consider extract a new JPanel for table
+
         // table for show products list
         table = new JTable();
         RepositoryAdapter tableModel = new RepositoryAdapter(repository);

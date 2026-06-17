@@ -170,11 +170,11 @@ public class PointOfSale extends JFrame {
                 CartItem selectedItem = cart.getCartItemAt(selectedRow);
                 if (selectedItem != null) {
                     cart.removeFromCart(selectedItem);
+                    // notify table to change because one of the product's stock has changed.
+                    // todo: should I notify here or notify in Product setter?
+                    repository.notifyListener();
+                    updateTotalAmount();
                 }
-                // notify table to change because one of the product's stock has changed.
-                // todo: should I notify here or notify in Product setter?
-                repository.notifyListener();
-                updateTotalAmount();
             }
         }
 
