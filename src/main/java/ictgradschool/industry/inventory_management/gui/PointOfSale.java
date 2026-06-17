@@ -91,15 +91,31 @@ public class PointOfSale extends JFrame {
     }
 
     private class CartPanel extends JPanel {
+        private JTable cartTable;
         public CartPanel() {
             JButton removeButton = new JButton("Remove Item");
-            JTable cartTable = new JTable();
+            cartTable = new JTable();
             CartAdapter tableModel = new CartAdapter(cart);
             cartTable.setModel(tableModel);
 
             JButton cancelButton = new JButton("Cancel");
             JButton checkoutButton = new JButton("Checkout");
+
+            removeButton.addActionListener(e -> removeFromCart());
+
             buildPanelGui(removeButton, cartTable, cancelButton, checkoutButton);
+        }
+
+        private void removeFromCart() {
+            int selectedRow = cartTable.getSelectedRow();
+            if (selectedRow != -1) {
+                CartItem selectedItem = cart.getCartItemAt(selectedRow);
+                if (selectedItem != null) {
+                    cart.removeFromCart(selectedItem);
+                }
+                // notify table to change because one of the product's stock has changed.
+                repository.notifyListener();
+            }
         }
 
         private void buildPanelGui(JButton removeButton, JTable cartTable, JButton cancelButton, JButton checkoutButton) {

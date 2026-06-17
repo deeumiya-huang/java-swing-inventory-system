@@ -34,6 +34,8 @@ public class Cart {
         } else {
             cartItems.remove(selectedItem);
         }
+
+        notifyListener();
     }
 
     public int size() {return cartItems.size();}
