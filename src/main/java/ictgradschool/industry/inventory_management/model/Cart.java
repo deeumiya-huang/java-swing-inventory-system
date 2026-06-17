@@ -11,6 +11,17 @@ public class Cart {
         cartItems = new ArrayList<>();
     }
 
+    public void clearAllCart() {
+        for (CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+            int quantity = cartItem.getQuantity();
+
+            product.setStock(product.getStock() + quantity);
+        }
+        cartItems = new ArrayList<>();
+        notifyListener();
+    }
+
     public void addToCart(Product product) {
         if (product.getStock() <= 0) return;
 

@@ -98,12 +98,15 @@ public class PointOfSale extends JFrame {
             CartAdapter tableModel = new CartAdapter(cart);
             cartTable.setModel(tableModel);
 
-            JButton cancelButton = new JButton("Cancel");
+            JButton clearButton = new JButton("Clear");
             JButton checkoutButton = new JButton("Checkout");
 
             removeButton.addActionListener(e -> removeFromCart());
-
-            buildPanelGui(removeButton, cartTable, cancelButton, checkoutButton);
+            clearButton.addActionListener(e -> {
+                cart.clearAllCart();
+                repository.notifyListener();
+            });
+            buildPanelGui(removeButton, cartTable, clearButton, checkoutButton);
         }
 
         private void removeFromCart() {
@@ -114,6 +117,7 @@ public class PointOfSale extends JFrame {
                     cart.removeFromCart(selectedItem);
                 }
                 // notify table to change because one of the product's stock has changed.
+                // todo: should I notify here or notify in Product setter?
                 repository.notifyListener();
             }
         }
