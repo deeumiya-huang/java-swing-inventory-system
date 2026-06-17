@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CartAdapter extends AbstractTableModel implements CartListener {
     private final Cart cart;
-    private final List<String> columnNames = new ArrayList<>(List.of("product", "quantity"));
+    private final List<String> columnNames = new ArrayList<>(List.of("product", "quantity", "unit price"));
 
     public CartAdapter(Cart cart) {
         this.cart = cart;
@@ -34,6 +34,7 @@ public class CartAdapter extends AbstractTableModel implements CartListener {
         return  switch (columnIndex) {
             case 0 -> item.getProduct().getName();
             case 1 -> item.getQuantity();
+            case 2 -> item.getProduct().getUnitPrice();
             default -> null;
         };
     }

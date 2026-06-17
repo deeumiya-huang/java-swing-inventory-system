@@ -49,6 +49,16 @@ public class Cart {
         notifyListener();
     }
 
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        for (CartItem cartItem : cartItems) {
+            double unitPrice = cartItem.getProduct().getUnitPrice();
+            int quantity = cartItem.getQuantity();
+            totalPrice += unitPrice * quantity;
+        }
+        return totalPrice;
+    }
+
     public int size() {return cartItems.size();}
 
     public CartItem getCartItemAt(int index) {

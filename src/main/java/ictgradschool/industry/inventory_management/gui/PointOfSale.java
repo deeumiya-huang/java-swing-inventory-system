@@ -10,6 +10,8 @@ import java.awt.*;
 public class PointOfSale extends JFrame {
     private final Repository repository;
     private final Cart cart;
+    private JLabel totalAmountLabel;
+
     public PointOfSale(JFrame main, Repository repository) {
         this.repository = repository;
         cart = new Cart();
@@ -61,6 +63,7 @@ public class PointOfSale extends JFrame {
                 cart.addToCart(selectedProduct);
                 // notify table to change because one of the product's stock has changed.
                 repository.notifyListener();
+                updateTotalAmount();
             }
         }
 
@@ -91,13 +94,14 @@ public class PointOfSale extends JFrame {
     }
 
     private class CartPanel extends JPanel {
-        private JTable cartTable;
+        private final JTable cartTable;
         public CartPanel() {
             JButton removeButton = new JButton("Remove Item");
             cartTable = new JTable();
             CartAdapter tableModel = new CartAdapter(cart);
             cartTable.setModel(tableModel);
 
+            totalAmountLabel = new JLabel("Total Amount: $0.00");
             JButton clearButton = new JButton("Clear");
             JButton checkoutButton = new JButton("Checkout");
 
@@ -105,8 +109,9 @@ public class PointOfSale extends JFrame {
             clearButton.addActionListener(e -> {
                 cart.clearAllCart();
                 repository.notifyListener();
+                updateTotalAmount();
             });
-            buildPanelGui(removeButton, cartTable, clearButton, checkoutButton);
+            buildPanelGui(removeButton, cartTable, clearButton, checkoutButton, totalAmountLabel);
         }
 
         private void removeFromCart() {
@@ -119,10 +124,11 @@ public class PointOfSale extends JFrame {
                 // notify table to change because one of the product's stock has changed.
                 // todo: should I notify here or notify in Product setter?
                 repository.notifyListener();
+                updateTotalAmount();
             }
         }
 
-        private void buildPanelGui(JButton removeButton, JTable cartTable, JButton cancelButton, JButton checkoutButton) {
+        private void buildPanelGui(JButton removeButton, JTable cartTable, JButton cancelButton, JButton checkoutButton, JLabel totalAmountLabel) {
             setLayout(new BorderLayout(5,5));
             setBorder(BorderFactory.createTitledBorder("Shopping Cart"));
 
@@ -136,11 +142,25 @@ public class PointOfSale extends JFrame {
             checkoutButton.setBackground(new Color(34, 139, 34));
             checkoutButton.setForeground(Color.WHITE);
 
-            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-            bottomPanel.add(cancelButton);
-            bottomPanel.add(checkoutButton);
-            add(bottomPanel, BorderLayout.SOUTH);
+            JPanel southContainer = new JPanel();
+            southContainer.setLayout(new BoxLayout(southContainer, BoxLayout.Y_AXIS));
 
+            JPanel amountPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+            amountPanel.add(totalAmountLabel);
+
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+            buttonPanel.add(cancelButton);
+            buttonPanel.add(checkoutButton);
+
+            southContainer.add(amountPanel);
+            southContainer.add(buttonPanel);
+
+            add(southContainer, BorderLayout.SOUTH);
         }
+    }
+
+    private void updateTotalAmount() {
+        double total = cart.getTotalPrice();
+        totalAmountLabel.setText(String.format("Total Amount: $%.2f", total));
     }
 }
