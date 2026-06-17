@@ -16,13 +16,12 @@ public class Repository implements Iterable<Product>{
     // for index search
     private final List<Product> indexedProducts;
 
-    private final List<RepositoryListener> listeners;
+    private final List<RepositoryListener> listeners = new ArrayList<>();
 
     public Repository(File file) {
         this.file = file;
         products = new ConcurrentHashMap<>();
         indexedProducts = new ArrayList<>();
-        listeners = new ArrayList<>();
     }
 
     public void save(){

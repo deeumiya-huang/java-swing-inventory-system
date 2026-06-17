@@ -1,8 +1,6 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.model.ReadOnlyTableModel;
-import ictgradschool.industry.inventory_management.model.Repository;
-import ictgradschool.industry.inventory_management.model.RepositoryAdapter;
+import ictgradschool.industry.inventory_management.model.*;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -11,8 +9,10 @@ import java.awt.*;
 
 public class PointOfSale extends JFrame {
     private final Repository repository;
+    private final Cart cart;
     public PointOfSale(JFrame main, Repository repository) {
         this.repository = repository;
+        cart = new Cart();
         JPanel inventoryPanel = new InventoryPanel();
         JPanel cartPanel = new CartPanel();
         JMenuBar menuBar = new MyMenuBar(this, main);
@@ -37,17 +37,31 @@ public class PointOfSale extends JFrame {
     }
 
     private class InventoryPanel extends JPanel{
-
+        private JTable inventoryTable;
         public InventoryPanel() {
             JButton addToCartButton = new JButton("Add to Cart");
-            JTable inventoryTable = new JTable();
+            inventoryTable = new JTable();
             ReadOnlyTableModel tableModel = new ReadOnlyTableModel(repository);
             inventoryTable.setModel(tableModel);
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
             sorter.setRowFilter(createStockFilter());
             inventoryTable.setRowSorter(sorter);
 
+            addToCartButton.addActionListener(e -> addToCart());
+
             buildPanelGui(addToCartButton, inventoryTable);
+        }
+
+        private void addToCart() {
+            int selectedRow = inventoryTable.getSelectedRow();
+
+            if (selectedRow != -1) {
+                String productId = (String)inventoryTable.getValueAt(selectedRow, 0);
+                Product selectedProduct = repository.getProduct(productId);
+                cart.addToCart(selectedProduct);
+                // notify table to change because one of the product's stock has changed.
+                repository.notifyListener();
+            }
         }
 
         private RowFilter<Object, Object> createStockFilter() {
@@ -80,6 +94,8 @@ public class PointOfSale extends JFrame {
         public CartPanel() {
             JButton removeButton = new JButton("Remove Item");
             JTable cartTable = new JTable();
+            CartAdapter tableModel = new CartAdapter(cart);
+            cartTable.setModel(tableModel);
 
             JButton cancelButton = new JButton("Cancel");
             JButton checkoutButton = new JButton("Checkout");
