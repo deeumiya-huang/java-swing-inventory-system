@@ -75,7 +75,7 @@ public class Main extends JFrame {
             });
 
             posBtn.addActionListener(e -> {
-                pos = new PointOfSale(repositoryModel);
+                pos = new PointOfSale(Main.this, repositoryModel);
                 pos.setVisible(true);
                 Main.this.setVisible(false);
             });
