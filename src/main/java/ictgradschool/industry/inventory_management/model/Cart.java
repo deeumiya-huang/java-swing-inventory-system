@@ -1,7 +1,14 @@
 package ictgradschool.industry.inventory_management.model;
 
+import ictgradschool.industry.inventory_management.admin.FilestoreManager;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Cart {
     private List<CartItem> cartItems;
@@ -59,6 +66,10 @@ public class Cart {
         return totalPrice;
     }
 
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
     public int size() {return cartItems.size();}
 
     public CartItem getCartItemAt(int index) {
@@ -70,9 +81,29 @@ public class Cart {
     }
 
     public void addCartListener (CartListener listener) {listeners.add(listener);}
+
     public void notifyListener() {
         for (CartListener listener : listeners) {
             listener.cartHasChanged(this);
+        }
+    }
+
+    public boolean checkout(File selectedFile) {
+        Map<Product, Integer> map = new HashMap<>();
+        for (CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+            int quantity = cartItem.getQuantity();
+
+            map.merge(product, quantity, Integer::sum);
+        }
+        try {
+            FilestoreManager.printReceipt(map, selectedFile);
+            cartItems = new ArrayList<>();
+            notifyListener();
+            return true;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

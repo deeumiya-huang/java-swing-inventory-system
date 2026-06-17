@@ -6,6 +6,9 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 public class PointOfSale extends JFrame {
     private final Repository repository;
@@ -106,12 +109,59 @@ public class PointOfSale extends JFrame {
             JButton checkoutButton = new JButton("Checkout");
 
             removeButton.addActionListener(e -> removeFromCart());
+            
             clearButton.addActionListener(e -> {
                 cart.clearAllCart();
                 repository.notifyListener();
                 updateTotalAmount();
             });
+            
+            checkoutButton.addActionListener(e -> checkout());
+            
             buildPanelGui(removeButton, cartTable, clearButton, checkoutButton, totalAmountLabel);
+        }
+
+        private void checkout() {
+            List<CartItem> cartItems = cart.getCartItems();
+            if (cartItems.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "The cart is empty");
+                return;
+            }
+            JFileChooser fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showSaveDialog(PointOfSale.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                if (selectedFile.exists()) {
+                    int response = JOptionPane.showConfirmDialog(PointOfSale.this,
+                            "The file already exists! Would you like to overwrite it? (Note: Old data will be lost)",
+                            "Confirm Overwrite",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    if (response == JOptionPane.NO_OPTION) {
+                        return;
+                    }
+                } else {
+                    try {
+                        boolean isCreated = selectedFile.createNewFile();
+                        if (!isCreated) {
+                            throw  new IOException("Failed to create a new file.");
+                        }
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+
+                boolean isCheckOut = cart.checkout(selectedFile);
+                if (isCheckOut) {
+                    repository.save();
+                    repository.notifyListener();
+                    updateTotalAmount();
+                    JOptionPane.showMessageDialog(null, "successfully checkout! The receipt was printed.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "checkout failed because of system problem", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
 
         private void removeFromCart() {

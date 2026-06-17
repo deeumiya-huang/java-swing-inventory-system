@@ -41,5 +41,6 @@ public class MyMenuBar extends JMenuBar {
             currentFrame.dispose();
             mainFrame.setVisible(true);
         }
+        //todo: how to clear cart before back to welcome if reuse this menu bar
     }
 }
