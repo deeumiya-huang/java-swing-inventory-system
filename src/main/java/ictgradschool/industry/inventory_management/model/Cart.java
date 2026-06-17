@@ -4,7 +4,6 @@ import ictgradschool.industry.inventory_management.admin.FilestoreManager;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

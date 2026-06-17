@@ -60,18 +60,15 @@ public class Product {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(", ");
-        sb.append(name);
-        sb.append(", description: ");
-        sb.append(description);
-        sb.append(", unit price: ");
-        sb.append(unitPrice);
-        sb.append(", stock quantity: ");
-        sb.append(stock);
-
-        return sb.toString();
+        return id +
+                ", " +
+                name +
+                ", description: " +
+                description +
+                ", unit price: " +
+                unitPrice +
+                ", stock quantity: " +
+                stock;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class PointOfSale extends JFrame {
     }
 
     private class InventoryPanel extends JPanel{
-        private JTable inventoryTable;
+        private final JTable inventoryTable;
         public InventoryPanel() {
             JButton addToCartButton = new JButton("Add to Cart");
             inventoryTable = new JTable();

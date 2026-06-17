@@ -66,8 +66,6 @@ public class Repository implements Iterable<Product>{
     public Product getProduct(String productID) {
         return products.get(productID);
     }
-    // todo: delete it if not used finally
-    public List<Product> getAllProducts() { return indexedProducts;}
 
     public Product getProductAt(int index) {
         if (index < 0 || index >= products.size()) {
