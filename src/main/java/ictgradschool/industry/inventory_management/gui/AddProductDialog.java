@@ -128,7 +128,7 @@ public class AddProductDialog extends JDialog {
         descField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                builder = builder.description(descField.getText());
+            builder = builder.description(descField.getText());
             }
         });
 
