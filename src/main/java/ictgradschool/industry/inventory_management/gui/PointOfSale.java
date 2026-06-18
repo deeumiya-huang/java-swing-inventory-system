@@ -21,7 +21,7 @@ public class PointOfSale extends JFrame {
         cart = new Cart();
         JPanel inventoryPanel = new InventoryPanel();
         JPanel cartPanel = new CartPanel();
-        JMenuBar menuBar = new MyMenuBar(this, main);
+        JMenuBar menuBar = new MyMenuBar(this, main, cart::clearAllCart);
 
         buildGui(inventoryPanel, cartPanel, menuBar);
 
