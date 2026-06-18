@@ -1,7 +1,11 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.model.*;
+import ictgradschool.industry.inventory_management.model.cart.Cart;
+import ictgradschool.industry.inventory_management.model.cart.CartAdapter;
+import ictgradschool.industry.inventory_management.model.cart.CartItem;
 import ictgradschool.industry.inventory_management.model.product.Product;
+import ictgradschool.industry.inventory_management.model.repository.ReadOnlyTableModel;
+import ictgradschool.industry.inventory_management.model.repository.Repository;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;

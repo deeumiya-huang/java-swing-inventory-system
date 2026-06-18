@@ -1,4 +1,4 @@
-package ictgradschool.industry.inventory_management.model;
+package ictgradschool.industry.inventory_management.model.cart;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

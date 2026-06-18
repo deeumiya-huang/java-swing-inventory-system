@@ -1,4 +1,4 @@
-package ictgradschool.industry.inventory_management.model;
+package ictgradschool.industry.inventory_management.model.repository;
 
 import ictgradschool.industry.inventory_management.admin.FilestoreManager;
 import ictgradschool.industry.inventory_management.model.product.Product;

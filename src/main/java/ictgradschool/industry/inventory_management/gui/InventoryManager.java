@@ -1,8 +1,8 @@
 package ictgradschool.industry.inventory_management.gui;
 
 import ictgradschool.industry.inventory_management.model.product.Product;
-import ictgradschool.industry.inventory_management.model.Repository;
-import ictgradschool.industry.inventory_management.model.RepositoryAdapter;
+import ictgradschool.industry.inventory_management.model.repository.Repository;
+import ictgradschool.industry.inventory_management.model.repository.RepositoryAdapter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

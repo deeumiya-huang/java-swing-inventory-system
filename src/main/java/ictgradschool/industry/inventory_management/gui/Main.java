@@ -1,12 +1,11 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.model.Repository;
+import ictgradschool.industry.inventory_management.model.repository.Repository;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame {

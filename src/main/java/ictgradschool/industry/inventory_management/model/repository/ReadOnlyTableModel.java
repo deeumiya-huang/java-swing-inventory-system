@@ -1,4 +1,4 @@
-package ictgradschool.industry.inventory_management.model;
+package ictgradschool.industry.inventory_management.model.repository;
 
 public class ReadOnlyTableModel extends RepositoryAdapter{
     public ReadOnlyTableModel(Repository repository) {
