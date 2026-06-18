@@ -1,5 +1,7 @@
 package ictgradschool.industry.inventory_management.model;
 
+import ictgradschool.industry.inventory_management.model.product.Product;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

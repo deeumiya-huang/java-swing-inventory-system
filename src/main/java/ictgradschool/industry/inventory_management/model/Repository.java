@@ -1,8 +1,8 @@
 package ictgradschool.industry.inventory_management.model;
 
 import ictgradschool.industry.inventory_management.admin.FilestoreManager;
+import ictgradschool.industry.inventory_management.model.product.Product;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,7 +40,7 @@ public class Repository implements Iterable<Product>{
             for (Product product : data) {
                 addProduct(product);
             }
-            return 1;
+            return indexedProducts.size();
         }
     }
 

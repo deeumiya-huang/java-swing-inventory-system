@@ -1,5 +1,7 @@
 package ictgradschool.industry.inventory_management.model;
 
+import ictgradschool.industry.inventory_management.model.product.Product;
+
 public class CartItem {
     private final Product product;
     private int quantity;

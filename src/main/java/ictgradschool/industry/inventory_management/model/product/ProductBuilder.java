@@ -1,7 +1,6 @@
-package ictgradschool.industry.inventory_management.admin;
+package ictgradschool.industry.inventory_management.model.product;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import ictgradschool.industry.inventory_management.model.Product;
 
 @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "")
 public class ProductBuilder {

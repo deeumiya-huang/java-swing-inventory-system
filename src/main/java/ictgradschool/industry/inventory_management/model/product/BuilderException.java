@@ -1,4 +1,4 @@
-package ictgradschool.industry.inventory_management.admin;
+package ictgradschool.industry.inventory_management.model.product;
 
 public class BuilderException extends RuntimeException{
     public BuilderException() {

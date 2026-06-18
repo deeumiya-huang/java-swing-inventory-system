@@ -2,7 +2,7 @@ package ictgradschool.industry.inventory_management.admin;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ictgradschool.industry.inventory_management.model.Product;
+import ictgradschool.industry.inventory_management.model.product.Product;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -1,12 +1,5 @@
 package ictgradschool.industry.inventory_management;
 
-import ictgradschool.industry.inventory_management.admin.FilestoreManager;
-import ictgradschool.industry.inventory_management.admin.ProductBuilder;
-import ictgradschool.industry.inventory_management.model.Product;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Test {
     public static void main(String[] args) {
 //        ProductBuilder pb = new ProductBuilder();

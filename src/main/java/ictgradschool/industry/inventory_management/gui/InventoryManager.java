@@ -1,6 +1,6 @@
 package ictgradschool.industry.inventory_management.gui;
 
-import ictgradschool.industry.inventory_management.model.Product;
+import ictgradschool.industry.inventory_management.model.product.Product;
 import ictgradschool.industry.inventory_management.model.Repository;
 import ictgradschool.industry.inventory_management.model.RepositoryAdapter;
 
