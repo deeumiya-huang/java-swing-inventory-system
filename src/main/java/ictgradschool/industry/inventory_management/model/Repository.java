@@ -28,9 +28,7 @@ public class Repository implements Iterable<Product>{
         FilestoreManager.saveData(this.indexedProducts, this.file);
     }
 
-    //todo: check this.
-
-    /* return -1 when load data failed, return 1 when success. */
+    /* return -1 when load data failed, return data size when success. */
     public int loadData() {
         List<Product> data = FilestoreManager.readData(this.file);
         if (data == null) {

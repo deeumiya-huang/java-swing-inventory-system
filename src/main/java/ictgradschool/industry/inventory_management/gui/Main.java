@@ -196,6 +196,7 @@ public class Main extends JFrame {
                                 "Load error", JOptionPane.WARNING_MESSAGE);
                     } else {
                         // data successfully loaded.
+                        System.out.println("Loaded " + result + " entries");
                         changeToSystemSelectPanel();
                     }
                 } catch (InterruptedException | ExecutionException e) {
