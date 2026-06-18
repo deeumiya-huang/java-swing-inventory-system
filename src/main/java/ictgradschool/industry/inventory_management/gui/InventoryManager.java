@@ -69,7 +69,7 @@ public class InventoryManager extends JFrame {
 
             if (answer == JOptionPane.YES_OPTION) {
                 repository.removeProductBy(productId);
-                repository.save(); //todo: should I save here? or let repository.removeProduct() call save()?
+                repository.save();
             }
         }
     }
