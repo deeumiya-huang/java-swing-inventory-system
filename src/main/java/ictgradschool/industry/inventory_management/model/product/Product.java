@@ -1,7 +1,6 @@
-package ictgradschool.industry.inventory_management.model;
+package ictgradschool.industry.inventory_management.model.product;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ictgradschool.industry.inventory_management.admin.ProductBuilder;
 
 import java.util.Objects;
 
@@ -13,13 +12,22 @@ public class Product {
     private double unitPrice;
     private int stock;
 
-    public Product(String id, String name, String description, double unitPrice, int stock) {
-        // force builder to use setter to validate. todo: check
+    // force to go through setter's validation when create a new instance.
+    Product(String id, String name, String description, double unitPrice, int stock) {
         setId(id);
         setName(name);
         setDescription(description);
         setUnitPrice(unitPrice);
         setStock(stock);
+    }
+
+    // default product for builder to use.
+    Product(){
+        id="0123456789";
+        name="New Product";
+        description="";
+        unitPrice = 0.0;
+        stock = 0;
     }
 
     public String getId() { return id; }
