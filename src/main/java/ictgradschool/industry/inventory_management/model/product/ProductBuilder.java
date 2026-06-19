@@ -15,7 +15,7 @@ public class ProductBuilder {
             isIdValid = true;
         } catch (IllegalArgumentException e) {
             isIdValid = false;
-            throw new BuilderException("invalid id", e);
+            throw new BuilderException(e.getMessage(), e);
         }
         return this;
     }

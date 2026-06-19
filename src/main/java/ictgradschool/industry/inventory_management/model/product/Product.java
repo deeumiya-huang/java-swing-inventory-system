@@ -38,8 +38,8 @@ public class Product {
 
     // put validation in setter
     public void setId(String id) {
-        if (id == null || !id.matches("^[a-zA-Z0-9]{10}$")) {
-            throw new IllegalArgumentException("ID must contain exactly 10 alphanumeric characters!");
+        if (id == null || !id.matches("^[A-Z0-9]{10}$")) {
+            throw new IllegalArgumentException("ID must contain exactly 10 characters, and consist only of numbers and uppercase letters!");
         }
         this.id = id;
     }

@@ -164,6 +164,7 @@ public class AddProductDialog extends JDialog {
             idField.setBorder(new LineBorder(Color.green));
         } catch (BuilderException _ex) {
             idField.setBorder(new LineBorder(Color.red));
+            JOptionPane.showMessageDialog(this, _ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
         }
         updateConfirm();
     }
@@ -179,6 +180,7 @@ public class AddProductDialog extends JDialog {
             nameField.setBorder(new LineBorder(Color.green));
         } catch (BuilderException _ex) {
             nameField.setBorder(new LineBorder(Color.red));
+            JOptionPane.showMessageDialog(this, _ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
         }
         updateConfirm();
     }
@@ -195,6 +197,7 @@ public class AddProductDialog extends JDialog {
             priceField.setBorder(new LineBorder(Color.green));
         } catch (NumberFormatException | BuilderException _ex) {
             priceField.setBorder(new LineBorder(Color.red));
+            JOptionPane.showMessageDialog(this, "invalid input", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
         updateConfirm();
     }
@@ -211,6 +214,7 @@ public class AddProductDialog extends JDialog {
             stockField.setBorder(new LineBorder(Color.green));
         } catch (NumberFormatException | BuilderException _ex) {
             stockField.setBorder(new LineBorder(Color.red));
+            JOptionPane.showMessageDialog(this, "invalid input", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
         updateConfirm();
     }
