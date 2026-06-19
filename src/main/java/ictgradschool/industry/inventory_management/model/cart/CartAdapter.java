@@ -30,7 +30,7 @@ public class CartAdapter extends AbstractTableModel implements CartListener {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex < 0 || rowIndex >= cart.size()) { return null;};
+        if (rowIndex < 0 || rowIndex >= cart.size()) { return null;}
         CartItem item = cart.getCartItemAt(rowIndex);
         return  switch (columnIndex) {
             case 0 -> item.getProduct().getName();
