@@ -13,7 +13,7 @@ public class Product {
     private int stock;
 
     // force to go through setter's validation when create a new instance.
-    Product(String id, String name, String description, double unitPrice, int stock) {
+    public Product(String id, String name, String description, double unitPrice, int stock) {
         setId(id);
         setName(name);
         setDescription(description);
