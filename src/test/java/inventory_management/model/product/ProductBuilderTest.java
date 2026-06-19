@@ -31,35 +31,27 @@ public class ProductBuilderTest {
 
     @Test
     public void inValidId() {
-        BuilderException ex =  assertThrows(BuilderException.class,()-> {
-            builder.id("001");
-        });
+        BuilderException ex =  assertThrows(BuilderException.class,()-> builder.id("001"));
         assertFalse(builder.isValid());
         assertEquals("ID must contain exactly 10 characters, and consist only of numbers and uppercase letters!", ex.getMessage());
     }
 
     @Test
     public void inValidName() {
-        assertThrows(BuilderException.class, ()-> {
-            builder.name("");
-        });
+        assertThrows(BuilderException.class, ()-> builder.name(""));
         assertFalse(builder.isValid());
     }
 
     @Test
     public void inValidUnitPrice() {
-        BuilderException ex = assertThrows(BuilderException.class, () -> {
-            builder.unitPrice(-10.0);
-        });
+        BuilderException ex = assertThrows(BuilderException.class, () -> builder.unitPrice(-10.0));
         assertEquals("Invalid Price", ex.getMessage());
         assertFalse(builder.isValid());
     }
 
     @Test
     public void invalidStock() {
-        BuilderException ex = assertThrows(BuilderException.class, ()-> {
-            builder.stock(-1);
-        });
+        assertThrows(BuilderException.class, ()-> builder.stock(-1));
         assertFalse(builder.isValid());
     }
 
