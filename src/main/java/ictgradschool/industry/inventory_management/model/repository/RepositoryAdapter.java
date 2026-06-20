@@ -33,6 +33,7 @@ public class RepositoryAdapter extends AbstractTableModel implements RepositoryL
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        if (rowIndex < 0 || rowIndex >= repository.size()){return null;}
         Product product = repository.getProductAt(rowIndex);
         return switch (columnIndex) {
             case 0 -> product.getId();
