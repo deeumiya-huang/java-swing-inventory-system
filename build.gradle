@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-}
+    id 'application'
+    id 'org.panteleyev.jpackageplugin' version '2.0.1'}
 
 group 'ictgradschool.industry'
 version '1.0'
@@ -17,6 +18,10 @@ tasks.named('wrapper') {
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainClass = 'ictgradschool.industry.inventory_management.gui.Main'
 }
 
 test {
@@ -36,4 +41,27 @@ dependencies {
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter-api", version: junitVersion
     testRuntimeOnly group: "org.junit.jupiter", name: "junit-jupiter-engine", version: junitVersion
     testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
+}
+
+jpackage {
+    appName = "InventoryManager"
+    type = org.panteleyev.jpackage.ImageType.APP_IMAGE
+    input = layout.projectDirectory.dir("build/libs")
+    destination = layout.buildDirectory.dir("jpackage")
+    mainJar = "${project.name}-${project.version}.jar"
+    mainClass = 'ictgradschool.industry.inventory_management.gui.Main'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': application.mainClass.get()
+        )
+    }
+    // Package all implementation dependencies (such as Jackson) into the JAR.
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
