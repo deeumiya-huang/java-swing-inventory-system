@@ -2,7 +2,6 @@
 
 Begin by forking this repository into your lab exercises namespace by clicking the ```fork``` button.
 
-![](spec/template/fork-button.png)
 
 Select your lab exercises namespace as the fork destination on the resulting window.
 
