@@ -5,7 +5,10 @@ import ictgradschool.industry.inventory_management.model.product.ProductBuilder;
 import ictgradschool.industry.inventory_management.model.product.Product;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -33,7 +36,8 @@ public class AddProductDialog extends JDialog {
         buttonPanelUI(buttonPanel);
 
         DialogUI(formPanel, buttonPanel);
-        updateConfirm(); // disable confirm button in default
+
+        validateAllFields(); // disable confirm button in default
     }
 
     private void DialogUI(JPanel formPanel, JPanel buttonPanel) {
@@ -65,161 +69,113 @@ public class AddProductDialog extends JDialog {
         } catch (BuilderException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
         }
-//        String id = idField.getText();
-//        String name = nameField.getText();
-//        String desc = descField.getText();
-//        String priceStr = priceField.getText();
-//        String stockStr = stockField.getText();
-//
-//        if (id.isBlank() || name.isBlank() || priceStr.isBlank() || stockStr.isBlank()) {
-//            JOptionPane.showMessageDialog(getOwner(), "Please fill in all required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        try {
-//            double price = Double.parseDouble(priceStr);
-//            int stock = Integer.parseInt(stockStr);
-//
-//            ProductBuilder pb = new ProductBuilder();
-//            newProduct = pb.id(id)
-//                                   .name(name)
-//                                   .description(desc)
-//                                   .unitPrice(price)
-//                                   .stock(stock)
-//                                   .build();
-//
-//            confirmed = true;
-//            dispose(); // close dialog
-//
-//        } catch (NumberFormatException e) {
-//            JOptionPane.showMessageDialog(this, "Price and Stock must be valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
-//        } catch (BuilderException e) {
-//            JOptionPane.showMessageDialog(null, e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
-//        }
     }
 
     private void formPanelUI(JPanel formPanel) {
         formPanel.setLayout(new GridLayout(5,2,10,10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+        DocumentListener instantValidationListener = new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { validateAllFields(); }
+            @Override public void removeUpdate(DocumentEvent e) { validateAllFields(); }
+            @Override public void changedUpdate(DocumentEvent e) { validateAllFields(); }
+        };
+
         formPanel.add(new JLabel("ID:"));
         idField = new JTextField();
+        idField.getDocument().addDocumentListener(instantValidationListener);
         formPanel.add(idField);
-        idField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                validateIdField();
-            }
-        });
 
         formPanel.add(new JLabel("Name:"));
         nameField = new JTextField();
+        nameField.getDocument().addDocumentListener(instantValidationListener);
         formPanel.add(nameField);
-        nameField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                validateNameField();
-            }
-        });
 
         formPanel.add(new JLabel("Description:"));
         descField = new JTextField();
+        descField.getDocument().addDocumentListener(instantValidationListener);
         formPanel.add(descField);
-        descField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-            builder = builder.description(descField.getText());
-            }
-        });
 
         formPanel.add(new JLabel("Unit Price:"));
         priceField = new JTextField();
+        priceField.getDocument().addDocumentListener(instantValidationListener);
         formPanel.add(priceField);
-        priceField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                validatePriceField();
-            }
-        });
 
         formPanel.add(new JLabel("Stock:"));
         stockField = new JTextField();
+        stockField.getDocument().addDocumentListener(instantValidationListener);
         formPanel.add(stockField);
-        stockField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                validateStockField();
+    }
+
+    private void validateAllFields() {
+        Border defaultBorder = UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border");
+
+        String idText = idField.getText();
+        if (idText.isBlank()) {
+            // if field is blank, set border back to default and set builder id field invalid.
+            idField.setBorder(defaultBorder);
+            builder.invalidateId();
+        } else {
+            try {
+                builder.id(idText);
+                idField.setBorder(new LineBorder(Color.GREEN));
+            } catch (BuilderException ex) {
+                idField.setBorder(new LineBorder(Color.RED));
             }
-        });
-    }
+        }
 
-    private void validateIdField() {
-        if (idField.getText().isBlank()) {
-            idField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-            updateConfirm();
-            return;
+        String nameText = nameField.getText();
+        if (nameText.isBlank()) {
+            nameField.setBorder(defaultBorder);
+            builder.invalidateName();
+        } else {
+            try {
+                builder.name(nameText);
+                nameField.setBorder(new LineBorder(Color.GREEN));
+            } catch (BuilderException ex) {
+                nameField.setBorder(new LineBorder(Color.RED));
+            }
         }
-        try {
-            builder = builder.id(idField.getText());
-            idField.setBorder(new LineBorder(Color.green));
-        } catch (BuilderException _ex) {
-            idField.setBorder(new LineBorder(Color.red));
-            JOptionPane.showMessageDialog(this, _ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-        updateConfirm();
-    }
+        // description field can be blank, set green as default
+        builder.description(descField.getText());
+        descField.setBorder(new LineBorder(Color.GREEN));
 
-    private void validateNameField() {
-        if (nameField.getText().isBlank()) {
-            nameField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-            updateConfirm();
-            return;
+        String priceText = priceField.getText();
+        if (priceText.isBlank()) {
+            priceField.setBorder(defaultBorder);
+            builder.invalidatePrice();
+        } else {
+            try {
+                double price = Double.parseDouble(priceText);
+                builder.unitPrice(price);
+                priceField.setBorder(new LineBorder(Color.GREEN));
+            } catch (NumberFormatException | BuilderException ex) {
+                priceField.setBorder(new LineBorder(Color.RED));
+                builder.invalidatePrice();
+                /* if cause NumberFormatException, we need to manually set price field invalid in builder.
+                Because if parseDouble failed, it will go to catch exception field before execute builder.unitPrice,
+                which means the isValidUnitPrice status still remain in the last time validation, which might be valid(true).
+                 */
+            }
         }
-        try {
-            builder = builder.name(nameField.getText());
-            nameField.setBorder(new LineBorder(Color.green));
-        } catch (BuilderException _ex) {
-            nameField.setBorder(new LineBorder(Color.red));
-            JOptionPane.showMessageDialog(this, _ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-        updateConfirm();
-    }
 
-    private void validatePriceField() {
-        if (priceField.getText().isBlank()) {
-            priceField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-            updateConfirm();
-            return;
+        // 5. Stock 驗證
+        String stockText = stockField.getText();
+        if (stockText.isBlank()) {
+            stockField.setBorder(defaultBorder);
+            builder.invalidateStock();
+        } else {
+            try {
+                int stock = Integer.parseInt(stockText);
+                builder.stock(stock);
+                stockField.setBorder(new LineBorder(Color.GREEN));
+            } catch (NumberFormatException | BuilderException ex) {
+                stockField.setBorder(new LineBorder(Color.RED));
+                builder.invalidateStock(); // same reason for NumberFormatException above
+            }
         }
-        try {
-            double price = Double.parseDouble(priceField.getText());
-            builder = builder.unitPrice(price);
-            priceField.setBorder(new LineBorder(Color.green));
-        } catch (NumberFormatException | BuilderException _ex) {
-            priceField.setBorder(new LineBorder(Color.red));
-            JOptionPane.showMessageDialog(this, "invalid input", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-        updateConfirm();
-    }
 
-    private void validateStockField() {
-        if (stockField.getText().isBlank()) {
-            stockField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-            updateConfirm();
-            return;
-        }
-        try {
-            int stock = Integer.parseInt(stockField.getText());
-            builder = builder.stock(stock);
-            stockField.setBorder(new LineBorder(Color.green));
-        } catch (NumberFormatException | BuilderException _ex) {
-            stockField.setBorder(new LineBorder(Color.red));
-            JOptionPane.showMessageDialog(this, "invalid input", "Input Error", JOptionPane.ERROR_MESSAGE);
-        }
-        updateConfirm();
-    }
-
-    public void updateConfirm() {
+        // decide confirm button can be used or not
         confirmButton.setEnabled(builder.isValid());
     }
 

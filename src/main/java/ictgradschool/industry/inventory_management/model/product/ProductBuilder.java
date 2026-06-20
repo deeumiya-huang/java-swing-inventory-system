@@ -61,6 +61,11 @@ public class ProductBuilder {
     public boolean isValid() {
         return isIdValid && isNameValid && isUnitPriceValid && isStockValid;
     }
+    // for addProductDialog using to reset blank field.
+    public void invalidateId() { this.isIdValid = false; }
+    public void invalidateName() { this.isNameValid = false; }
+    public void invalidatePrice() { this.isUnitPriceValid = false; }
+    public void invalidateStock() { this.isStockValid = false; }
 
     public Product build() throws BuilderException {
         if (!isValid()) {
