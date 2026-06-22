@@ -6,6 +6,16 @@ For an optimal user experience, the application has been pre-packaged using `jpa
 
 ---
 
+## 🛠️ Tech Stack & Architecture
+
+* **Programming Language**: Java 17+
+* **GUI Framework**: Java Swing
+* **Design Patterns**: Implemented using the **MVP (Model-View-Presenter)** pattern, along with **Adapter** and **Listener** patterns for event handling and data binding.
+* **Data Storage**: `.json` file.
+* **Deployment Tool**: `jpackage`
+
+---
+
 ## 🚀 Key Features
 
 * **Multi-Screen Navigation**: Integrates a "Welcome Screen", "Inventory Manager", and "Point of Sale" into a unified user workflow.
@@ -46,16 +56,6 @@ Thanks to `jpackage`, you can run this app out-of-the-box on machines without Ja
 4. Open the extracted folder and double-click **`Inventory-POS-System.exe`** (Windows) or the respective executable for your OS to launch!
 
 > ⚠️ **Note**: On your very first run, please select "Create New Filestore" on the Welcome Screen to initialize a new data file before adding products.
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-* **Programming Language**: Java 17+
-* **GUI Framework**: Java Swing
-* **Design Patterns**: Implemented using the **MVP (Model-View-Presenter)** pattern, along with **Adapter** and **Listener** patterns for event handling and data binding.
-* **Data Storage**: `.json` file.
-* **Deployment Tool**: `jpackage`
 
 ---
 
