@@ -10,6 +10,7 @@ For an optimal user experience, the application has been pre-packaged using `jpa
 
 * **Programming Language**: Java 17+
 * **GUI Framework**: Java Swing
+* **Test Unit**: JUnit 5
 * **Design Patterns**: Implemented using the **MVP (Model-View-Presenter)** pattern, along with **Adapter** and **Listener** patterns for event handling and data binding.
 * **Data Storage**: `.json` file.
 * **Deployment Tool**: `jpackage`
