@@ -52,9 +52,9 @@ For an optimal user experience, the application has been pre-packaged using `jpa
 Thanks to `jpackage`, you can run this app out-of-the-box on machines without Java installed.
 
 1. Navigate to the [Releases](https://github.com/YourGitHubUsername/YourRepoName/releases) page of this repository.
-2. Download the latest `Inventory-POS-System.zip` file.
+2. Download the latest `InventoryManager.zip` file.
 3. Extract the ZIP archive to any directory on your computer.
-4. Open the extracted folder and double-click **`Inventory-POS-System.exe`** (Windows) or the respective executable for your OS to launch!
+4. Open the extracted folder and double-click **`InventoryManager.exe`** (Windows) or the respective executable for your OS to launch!
 
 > ⚠️ **Note**: On your very first run, please select "Create New Filestore" on the Welcome Screen to initialize a new data file before adding products.
 
