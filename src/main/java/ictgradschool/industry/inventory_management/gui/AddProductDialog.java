@@ -108,36 +108,39 @@ public class AddProductDialog extends JDialog {
     private void validateAllFields() {
         Border defaultBorder = UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border");
 
-        String idText = idField.getText();
-        if (idText.isBlank()) {
-            // if field is blank, set border back to default and set builder id field invalid.
-            idField.setBorder(defaultBorder);
-            builder.invalidateId();
-        } else {
-            try {
-                builder.id(idText);
-                idField.setBorder(new LineBorder(Color.GREEN));
-            } catch (BuilderException ex) {
-                idField.setBorder(new LineBorder(Color.RED));
-            }
-        }
+        validateId(defaultBorder);
 
-        String nameText = nameField.getText();
-        if (nameText.isBlank()) {
-            nameField.setBorder(defaultBorder);
-            builder.invalidateName();
-        } else {
-            try {
-                builder.name(nameText);
-                nameField.setBorder(new LineBorder(Color.GREEN));
-            } catch (BuilderException ex) {
-                nameField.setBorder(new LineBorder(Color.RED));
-            }
-        }
+        validateName(defaultBorder);
         // description field can be blank, set green as default
         builder.description(descField.getText());
         descField.setBorder(new LineBorder(Color.GREEN));
 
+        validateUnitPrice(defaultBorder);
+
+        validateStock(defaultBorder);
+
+        // decide confirm button can be used or not
+        confirmButton.setEnabled(builder.isValid());
+    }
+
+    private void validateStock(Border defaultBorder) {
+        String stockText = stockField.getText();
+        if (stockText.isBlank()) {
+            stockField.setBorder(defaultBorder);
+            builder.invalidateStock();
+        } else {
+            try {
+                int stock = Integer.parseInt(stockText);
+                builder.stock(stock);
+                stockField.setBorder(new LineBorder(Color.GREEN));
+            } catch (NumberFormatException | BuilderException ex) {
+                stockField.setBorder(new LineBorder(Color.RED));
+                builder.invalidateStock(); // same reason for NumberFormatException above
+            }
+        }
+    }
+
+    private void validateUnitPrice(Border defaultBorder) {
         String priceText = priceField.getText();
         if (priceText.isBlank()) {
             priceField.setBorder(defaultBorder);
@@ -156,25 +159,37 @@ public class AddProductDialog extends JDialog {
                  */
             }
         }
+    }
 
-        // 5. Stock 驗證
-        String stockText = stockField.getText();
-        if (stockText.isBlank()) {
-            stockField.setBorder(defaultBorder);
-            builder.invalidateStock();
+    private void validateName(Border defaultBorder) {
+        String nameText = nameField.getText();
+        if (nameText.isBlank()) {
+            nameField.setBorder(defaultBorder);
+            builder.invalidateName();
         } else {
             try {
-                int stock = Integer.parseInt(stockText);
-                builder.stock(stock);
-                stockField.setBorder(new LineBorder(Color.GREEN));
-            } catch (NumberFormatException | BuilderException ex) {
-                stockField.setBorder(new LineBorder(Color.RED));
-                builder.invalidateStock(); // same reason for NumberFormatException above
+                builder.name(nameText);
+                nameField.setBorder(new LineBorder(Color.GREEN));
+            } catch (BuilderException ex) {
+                nameField.setBorder(new LineBorder(Color.RED));
             }
         }
+    }
 
-        // decide confirm button can be used or not
-        confirmButton.setEnabled(builder.isValid());
+    private void validateId(Border defaultBorder) {
+        String idText = idField.getText();
+        if (idText.isBlank()) {
+            // if field is blank, set border back to default and set builder id field invalid.
+            idField.setBorder(defaultBorder);
+            builder.invalidateId();
+        } else {
+            try {
+                builder.id(idText);
+                idField.setBorder(new LineBorder(Color.GREEN));
+            } catch (BuilderException ex) {
+                idField.setBorder(new LineBorder(Color.RED));
+            }
+        }
     }
 
     public boolean isConfirmed() {
